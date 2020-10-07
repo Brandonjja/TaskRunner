@@ -96,7 +96,7 @@ public class PlayerTR {
 	public void removeTaskProgress(int id, int howMuch) {
 		for (TR_Task task : taskList) {
 			if (task.getTaskID() == id) {
-				task.removeTaskProgress(id, howMuch);
+				task.removeTaskProgress(player, id, howMuch);
 				break;
 			}
 		}
