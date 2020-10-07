@@ -33,8 +33,8 @@ public class TR_Task {
 		neededCompletions.put(ctr, 1);
 		
 		++ctr;
-		descriptions.put(ctr, "Gather 15 Obsidian"); // id = 3
-		neededCompletions.put(ctr, 15);
+		descriptions.put(ctr, "Gather 8 Obsidian"); // id = 3
+		neededCompletions.put(ctr, 8);
 		
 		++ctr;
 		descriptions.put(ctr, "Kill 5 Zombie Pigmen"); // id = 4
@@ -78,6 +78,26 @@ public class TR_Task {
 		
 		++ctr;
 		descriptions.put(ctr, "Kill a Ghast"); // id = 14
+		neededCompletions.put(ctr, 1);
+		
+		++ctr;
+		descriptions.put(ctr, "Tame a Wolf"); // id = 15
+		neededCompletions.put(ctr, 1);
+		
+		++ctr;
+		descriptions.put(ctr, "Break 20 Glowstone"); // id = 16
+		neededCompletions.put(ctr, 20);
+		
+		++ctr;
+		descriptions.put(ctr, "Die from Lava"); // id = 17
+		neededCompletions.put(ctr, 1);
+		
+		++ctr;
+		descriptions.put(ctr, "Mine 64 Quartz Ore Blocks"); // id = 18
+		neededCompletions.put(ctr, 64);
+		
+		++ctr;
+		descriptions.put(ctr, "Enchant a Golden Shovel"); // id = 19
 		neededCompletions.put(ctr, 1);
 		
 	}
@@ -146,7 +166,7 @@ public class TR_Task {
 		}
 	}
 	
-	public void removeTaskProgress(int id, int howMuch) {
+	public void removeTaskProgress(Player player, int id, int howMuch) {
 		
 		// If the task id is not being used in the current game, return
 		if (!TaskRun.currentGame.getIDList().contains(id)) {
@@ -156,12 +176,16 @@ public class TR_Task {
 		if (isComplete()) {
 			return;
 		}
+		
+		int oldCompleted = completed;
+		
 		if (completed > 0) {
 			if (completed - howMuch < 0) {
 				completed = 0;
 			} else {
 				completed -= howMuch;
 			}
+			TaskRun.getPlayer(player).updateScoreboard(this, oldCompleted);
 		}
 	}
 	
