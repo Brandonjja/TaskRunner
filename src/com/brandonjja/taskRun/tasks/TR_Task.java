@@ -49,8 +49,8 @@ public class TR_Task {
 		neededCompletions.put(ctr, 1);
 		
 		++ctr;
-		descriptions.put(ctr, "Throw 32 Snowballs"); // id = 7
-		neededCompletions.put(ctr, 32);
+		descriptions.put(ctr, "Throw 128 Snowballs"); // id = 7
+		neededCompletions.put(ctr, 128);
 		
 		++ctr;
 		descriptions.put(ctr, "Stand on Bedrock"); // id = 8
@@ -81,8 +81,8 @@ public class TR_Task {
 		neededCompletions.put(ctr, 1);
 		
 		++ctr;
-		descriptions.put(ctr, "Tame a Wolf"); // id = 15
-		neededCompletions.put(ctr, 1);
+		descriptions.put(ctr, "Shear 10 Sheep"); // id = 15
+		neededCompletions.put(ctr, 10);
 		
 		++ctr;
 		descriptions.put(ctr, "Break 20 Glowstone"); // id = 16
@@ -98,6 +98,10 @@ public class TR_Task {
 		
 		++ctr;
 		descriptions.put(ctr, "Enchant a Golden Shovel"); // id = 19
+		neededCompletions.put(ctr, 1);
+		
+		++ctr;
+		descriptions.put(ctr, "Run to X: 512"); // id = 20
 		neededCompletions.put(ctr, 1);
 		
 	}
