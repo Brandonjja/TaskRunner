@@ -3,6 +3,7 @@ package com.brandonjja.taskRun.listeners.player;
 import org.bukkit.Material;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -29,6 +30,19 @@ public class PlayerInteractListener implements Listener {
 		if (player.getItemInHand().getType() == Material.SNOW_BALL) {
 			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				Game.completeTask(player, 7);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onShearSheep(PlayerInteractAtEntityEvent e) {
+		Player player = e.getPlayer();
+		if (player.getItemInHand().getType() == Material.SHEARS) {
+			if (e.getRightClicked() instanceof Sheep) {
+				Sheep sheep = (Sheep) e.getRightClicked();
+				if (sheep.isAdult() && !sheep.isSheared()) {
+					Game.completeTask(player, 15);
+				}
 			}
 		}
 	}
