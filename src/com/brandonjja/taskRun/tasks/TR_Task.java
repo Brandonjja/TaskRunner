@@ -104,6 +104,10 @@ public class TR_Task {
 		descriptions.put(ctr, "Run to X: 512"); // id = 20
 		neededCompletions.put(ctr, 1);
 		
+		++ctr;
+		descriptions.put(ctr, "Bake a Cake"); // id = 21
+		neededCompletions.put(ctr, 1);
+		
 	}
 	
 	int taskID;

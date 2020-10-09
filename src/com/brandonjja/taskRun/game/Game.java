@@ -17,7 +17,7 @@ public class Game {
 	int players;
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
-	private int totalTasksToFinish = 5;
+	private int totalTasksToFinish = 10;
 	
 	public static void completeTask(Player player, int id) {
 		Game game = TaskRun.currentGame;

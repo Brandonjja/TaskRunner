@@ -16,3 +16,6 @@ commands:
     tt:
         usage: /tt
         description: Toggles the side task bar (same as /toggletasks)
+    back:
+        usage: /back
+        description: Teleports you to your previous location after TPing

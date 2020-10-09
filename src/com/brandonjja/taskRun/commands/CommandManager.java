@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.brandonjja.taskRun.commands.handler.BackCommand;
 import com.brandonjja.taskRun.commands.handler.NewGameCommand;
 import com.brandonjja.taskRun.commands.handler.TasksCommand;
 import com.brandonjja.taskRun.commands.handler.ToggleTasks;
@@ -29,6 +30,7 @@ public class CommandManager implements CommandExecutor {
 		commandList.put("tasks", new TasksCommand());
 		commandList.put("toggletasks", new ToggleTasks());
 		commandList.put("tt", new ToggleTasks());
+		commandList.put("back", new BackCommand());
 		
 		for (String cmdLabel : commandList.keySet()) {
 			register(cmdLabel, new CommandManager());
