@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.brandonjja.taskRun.TaskRun;
@@ -18,6 +19,7 @@ public class PlayerTR {
 	private ScoreboardTR board = null;
 	private boolean hasScoreboard = true;
 	private boolean enteredNether = false;
+	private Location location;
 	
 	public PlayerTR(Player player) {
 		this.player = player;
@@ -139,5 +141,13 @@ public class PlayerTR {
 	
 	public void enterNether() {
 		enteredNether = true;
+	}
+	
+	public void saveLocation(Location location) {
+		this.location = location;
+	}
+	
+	public Location getLocation() {
+		return location;
 	}
 }

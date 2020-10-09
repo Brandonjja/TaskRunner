@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 import com.brandonjja.taskRun.TaskRun;
+import com.brandonjja.taskRun.commands.handler.BackCommand;
 import com.brandonjja.taskRun.listeners.player.PlayerConnectionListener;
 import com.brandonjja.taskRun.listeners.player.PlayerCraftItemListener;
 import com.brandonjja.taskRun.listeners.player.PlayerDeathListener;
@@ -35,6 +36,8 @@ public class ListenerManager {
 		register(new CreatureSpawnListener());
 		register(new EntityTameListener());
 		register(new CompassClickListener());
+		
+		register(new BackCommand());
 	}
 	
 	private static void register(Listener listener) {
