@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.brandonjja.taskRun.TaskRun;
@@ -25,9 +26,10 @@ public class PlayerDeathListener implements Listener {
 		if (e.getDeathMessage().contains("lava")) {
 			Game.completeTask(trPlayer.getPlayer(), 17);
 		}
-		
-		
-		e.getEntity().getInventory().addItem(new ItemStack(Material.COMPASS));
-		
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		e.getPlayer().getInventory().addItem(new ItemStack(Material.COMPASS));
 	}
 }

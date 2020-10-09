@@ -27,4 +27,12 @@ public class PlayerMoveListener implements Listener {
 			Game.completeTask(player, 9);
 		}
 	}
+	
+	@EventHandler
+	public void onRunXBlocks(PlayerMoveEvent e) {
+		Player player = e.getPlayer();
+		if (player.getLocation().getX() > 512) {
+			Game.completeTask(player, 20);
+		}
+	}
 }

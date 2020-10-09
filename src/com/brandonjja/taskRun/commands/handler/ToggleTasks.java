@@ -25,7 +25,7 @@ public class ToggleTasks extends TaskRunCommand {
 		}*/
 		
 		trPlayer.toggleScoreboard();
-		trPlayer.setNewScoreboard();
+		trPlayer.setNewScoreboard(false, true);
 		
 		//trPlayer.toggleScoreboard();
 		if (trPlayer.getHasScoreboard()) {

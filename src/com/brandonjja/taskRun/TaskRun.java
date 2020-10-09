@@ -52,7 +52,7 @@ public class TaskRun extends JavaPlugin {
 		} else {
 			PlayerTR trPlayer = getPlayer(player);
 			trPlayer.updatePlayer(player);
-			trPlayer.setNewScoreboard();
+			trPlayer.setNewScoreboard(false, false);
 		}
 	}
 	

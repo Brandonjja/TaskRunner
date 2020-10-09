@@ -59,7 +59,7 @@ public class Game {
 		}
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			pl.sendMessage(ChatColor.GREEN + "A new " + ChatColor.GOLD + "TaskRun" + ChatColor.GREEN + " game has started. Goodluck!");
+			pl.sendMessage(ChatColor.GREEN + "A new " + ChatColor.GOLD + "Task Runner" + ChatColor.GREEN + " game has started. Goodluck!");
 			pl.sendMessage(ChatColor.GREEN + "You can do " + ChatColor.AQUA + "/tasks" + ChatColor.GREEN + " to view your tasks.");
 			PlayerTR trPlayer = TaskRun.getPlayer(pl);
 			trPlayer.setTaskList(taskList);

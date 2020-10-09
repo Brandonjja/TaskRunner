@@ -3,6 +3,7 @@ package com.brandonjja.taskRun.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -14,8 +15,9 @@ public class PlayerTR {
 	private Player player;
 	private List<TR_Task> taskList;
 	private int totalTasksCompleted = 0;
-	private ScoreboardTR board;
+	private ScoreboardTR board = null;
 	private boolean hasScoreboard = true;
+	private boolean enteredNether = false;
 	
 	public PlayerTR(Player player) {
 		this.player = player;
@@ -25,6 +27,7 @@ public class PlayerTR {
 		this.player = player;
 		this.totalTasksCompleted = 0;
 		this.hasScoreboard = true;
+		this.enteredNether = false;
 		setTaskList(taskList);
 	}
 	
@@ -102,7 +105,15 @@ public class PlayerTR {
 		}
 	}
 	
-	public void setNewScoreboard() {
+	public void setNewScoreboard(boolean newGame, boolean toggle) {
+		if (!newGame && board != null && toggle) {
+			if (hasScoreboard) {
+				player.setScoreboard(board.getScoreboard());
+			} else {
+				player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+			}
+			return;
+		}
 		this.board = new ScoreboardTR(this);
 	}
 	
@@ -111,7 +122,7 @@ public class PlayerTR {
 	}
 	
 	public void updateScoreboard(TR_Task task, int oldScore) {
-		board.updateTask(task, oldScore);
+		board.updateTask(task, player, oldScore);
 	}
 	
 	public boolean getHasScoreboard() {
@@ -120,5 +131,13 @@ public class PlayerTR {
 	
 	public void toggleScoreboard() {
 		hasScoreboard = !hasScoreboard;
+	}
+	
+	public boolean hasEnteredNether() {
+		return enteredNether;
+	}
+	
+	public void enterNether() {
+		enteredNether = true;
 	}
 }

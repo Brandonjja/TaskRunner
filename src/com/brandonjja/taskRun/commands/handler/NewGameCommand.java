@@ -14,7 +14,7 @@ public class NewGameCommand extends TaskRunCommand {
 		TaskRun.currentGame = new Game();
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			TaskRun.getPlayer(pl).setNewScoreboard();
+			TaskRun.getPlayer(pl).setNewScoreboard(true, false);
 		}
 		
 		return true;
