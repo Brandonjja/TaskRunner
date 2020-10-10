@@ -19,3 +19,6 @@ commands:
     back:
         usage: /back
         description: Teleports you to your previous location after TPing
+    pause:
+        usage: /pause
+        description: Pause or unpauses the game
