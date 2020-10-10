@@ -108,6 +108,10 @@ public class TR_Task {
 		descriptions.put(ctr, "Bake a Cake"); // id = 21
 		neededCompletions.put(ctr, 1);
 		
+		++ctr;
+		descriptions.put(ctr, "Eat 10 Raw Chicken"); // id = 22
+		neededCompletions.put(ctr, 10);
+		
 	}
 	
 	int taskID;
@@ -153,7 +157,7 @@ public class TR_Task {
 		return descriptions.size();
 	}
 	
-	public void completeTask(Player player, int id) {
+	public void completeTask(PlayerTR player, int id) {
 		
 		// If the task id is not being used in the current game, return
 		if (!TaskRun.currentGame.getIDList().contains(id)) {
@@ -167,14 +171,14 @@ public class TR_Task {
 		if (completed < needToComplete) {
 			int oldCompleted = completed;
 			completed++;
-			TaskRun.getPlayer(player).updateScoreboard(this, oldCompleted);
+			player.updateScoreboard(this, oldCompleted);
 			if (completed == needToComplete) {
-				announceTaskComplete(player, id);
+				announceTaskComplete(player.getPlayer(), id);
 			}
 		}
 	}
 	
-	public void removeTaskProgress(Player player, int id, int howMuch) {
+	public void removeTaskProgress(PlayerTR player, int id, int howMuch) {
 		
 		// If the task id is not being used in the current game, return
 		if (!TaskRun.currentGame.getIDList().contains(id)) {
@@ -193,7 +197,7 @@ public class TR_Task {
 			} else {
 				completed -= howMuch;
 			}
-			TaskRun.getPlayer(player).updateScoreboard(this, oldCompleted);
+			player.updateScoreboard(this, oldCompleted);
 		}
 	}
 	

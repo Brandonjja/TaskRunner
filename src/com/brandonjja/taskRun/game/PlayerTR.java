@@ -15,14 +15,17 @@ import com.brandonjja.taskRun.tasks.TR_Task;
 public class PlayerTR {
 	private Player player;
 	private List<TR_Task> taskList;
-	private int totalTasksCompleted = 0;
+	private int totalTasksCompleted;
 	private ScoreboardTR board = null;
-	private boolean hasScoreboard = true;
-	private boolean enteredNether = false;
+	private boolean hasScoreboard;
+	private boolean enteredNether;
 	private Location location;
 	
 	public PlayerTR(Player player) {
 		this.player = player;
+		this.totalTasksCompleted = 0;
+		this.hasScoreboard = true;
+		this.enteredNether = false;
 	}
 	
 	public PlayerTR(Player player, List<TR_Task> taskList) {
@@ -90,19 +93,35 @@ public class PlayerTR {
 	}
 	
 	public void completeTask(int id) {
-		for (TR_Task task : taskList) {
-			if (task.getTaskID() == id) {
-				task.completeTask(player, id);
-				break;
+
+		Game game = TaskRun.currentGame;
+		if (game == null) {
+			return;
+		}
+
+		if (game.idListContains(id)) {
+			for (TR_Task task : taskList) {
+				if (task.getTaskID() == id) {
+					task.completeTask(this, id);
+					break;
+				}
 			}
 		}
 	}
-	
+
 	public void removeTaskProgress(int id, int howMuch) {
-		for (TR_Task task : taskList) {
-			if (task.getTaskID() == id) {
-				task.removeTaskProgress(player, id, howMuch);
-				break;
+		
+		Game game = TaskRun.currentGame;
+		if (game == null) {
+			return;
+		}
+		
+		if (game.idListContains(id)) {
+			for (TR_Task task : taskList) {
+				if (task.getTaskID() == id) {
+					task.removeTaskProgress(this, id, howMuch);
+					break;
+				}
 			}
 		}
 	}

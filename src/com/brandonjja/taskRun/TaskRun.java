@@ -47,7 +47,12 @@ public class TaskRun extends JavaPlugin {
 	
 	public static void addPlayer(Player player) {
 		if (!playerList.containsKey(player.getName())) {
-			PlayerTR trPlayer = new PlayerTR(player);
+			PlayerTR trPlayer;
+			if (currentGame != null) {
+				trPlayer = new PlayerTR(player, currentGame.getTaskList());
+			} else {
+				trPlayer = new PlayerTR(player);
+			}
 			playerList.put(player.getName(), trPlayer);
 		} else {
 			PlayerTR trPlayer = getPlayer(player);

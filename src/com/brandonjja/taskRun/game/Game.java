@@ -17,31 +17,7 @@ public class Game {
 	int players;
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
-	private int totalTasksToFinish = 10;
-	
-	public static void completeTask(Player player, int id) {
-		Game game = TaskRun.currentGame;
-		if (game == null) {
-			return;
-		}
-		
-		if (game.idListContains(id)) {
-			PlayerTR trPlayer = TaskRun.getPlayer(player);
-			trPlayer.completeTask(id);
-		}
-	}
-	
-	public static void removeTaskProgress(Player player, int id, int howMuch) {
-		Game game = TaskRun.currentGame;
-		if (game == null) {
-			return;
-		}
-		
-		if (game.idListContains(id)) {
-			PlayerTR trPlayer = TaskRun.getPlayer(player);
-			trPlayer.removeTaskProgress(id, howMuch);
-		}
-	}
+	private int totalTasksToFinish = 5;
 	
 	public Game() {
 		usingIDS = new ArrayList<>();
@@ -74,6 +50,10 @@ public class Game {
 	
 	public List<Integer> getIDList() {
 		return usingIDS;
+	}
+	
+	public List<TR_Task> getTaskList() {
+		return taskList;
 	}
 	
 	public boolean idListContains(int id) {
