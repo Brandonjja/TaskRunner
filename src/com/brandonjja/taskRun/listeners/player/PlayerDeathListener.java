@@ -14,11 +14,20 @@ public class PlayerDeathListener implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Iterator<ItemStack> it = e.getDrops().iterator();
-		
 		while (it.hasNext()) {
 			ItemStack stack = it.next();
-			if (stack.getType() == Material.BLAZE_ROD || stack.getType() == Material.OBSIDIAN) {
+			if (stack.getType() == Material.BLAZE_ROD) {
 				e.getDrops().remove(stack);
+				break;
+			}
+		}
+		
+		it = e.getDrops().iterator();
+		while (it.hasNext()) {
+			ItemStack stack = it.next();
+			if (stack.getType() == Material.OBSIDIAN) {
+				e.getDrops().remove(stack);
+				break;
 			}
 		}
 	}
