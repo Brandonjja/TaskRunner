@@ -19,6 +19,8 @@ public class BlockListener implements Listener {
 			trPlayer.completeTask(16);
 		} else if (e.getBlock().getType() == Material.QUARTZ_ORE) {
 			trPlayer.completeTask(18);
+		} else if (e.getBlock().getType() == Material.NETHERRACK) {
+			trPlayer.completeTask(24);
 		}
 	}
 }
