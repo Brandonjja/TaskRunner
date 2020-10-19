@@ -189,6 +189,8 @@ public class TaskListeners implements Listener {
 			
 		} else if (item.getType() == Material.CAKE) {
 			trPlayer.completeTask(21);
+		} else if (item.getType() == Material.GOLDEN_APPLE) {
+			trPlayer.completeTask(23);
 		}
 	}
 	

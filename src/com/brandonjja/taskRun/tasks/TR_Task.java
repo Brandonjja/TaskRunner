@@ -112,6 +112,14 @@ public class TR_Task {
 		descriptions.put(ctr, "Eat 10 Raw Chicken"); // id = 22
 		neededCompletions.put(ctr, 10);
 		
+		++ctr;
+		descriptions.put(ctr, "Make a Gapple"); // id = 23
+		neededCompletions.put(ctr, 1);
+		
+		++ctr;
+		descriptions.put(ctr, "Break 512 Netherrack"); // id = 24
+		neededCompletions.put(ctr, 512);
+		
 	}
 	
 	int taskID;
