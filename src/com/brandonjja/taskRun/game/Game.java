@@ -7,6 +7,10 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,6 +22,8 @@ public class Game {
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
 	private int totalTasksToFinish = 5;
+	
+	private static int chickenTaskID = -1;
 	
 	public Game() {
 		usingIDS = new ArrayList<>();
@@ -45,6 +51,33 @@ public class Game {
 			}
 			
 		}
+		
+		if (chickenTaskID != -1) {
+			Bukkit.getScheduler().cancelTask(chickenTaskID);
+		}
+		
+		chickenTaskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(TaskRun.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				Random random = new Random();
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					for (Entity entity : pl.getNearbyEntities(20, 20, 20)) {
+						if (!(entity.getType().equals(EntityType.CHICKEN))) continue;
+						
+						Chicken chicken = (Chicken) entity;
+						
+						if (!chicken.isAdult()) continue;
+						
+						if (random.nextInt(10) < 4) {
+							pl.getWorld().dropItem(entity.getLocation(), new ItemStack(Material.EGG));
+							pl.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2, 1);
+						}
+						
+					}
+				}
+			}
+			
+		}, 20 * 30, 20 * 60); // delay, period
 		
 	}
 	
