@@ -117,8 +117,8 @@ public class TR_Task {
 		neededCompletions.put(ctr, 1);
 		
 		++ctr;
-		descriptions.put(ctr, "Break 512 Netherrack"); // id = 24
-		neededCompletions.put(ctr, 512);
+		descriptions.put(ctr, "Break 256 Netherrack"); // id = 24
+		neededCompletions.put(ctr, 256);
 		
 	}
 	
