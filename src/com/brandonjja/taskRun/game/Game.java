@@ -68,7 +68,7 @@ public class Game {
 						
 						if (!chicken.isAdult()) continue;
 						
-						if (random.nextInt(10) < 4) {
+						if (random.nextInt(10) < 2) {
 							pl.getWorld().dropItem(entity.getLocation(), new ItemStack(Material.EGG));
 							pl.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2, 1);
 						}
