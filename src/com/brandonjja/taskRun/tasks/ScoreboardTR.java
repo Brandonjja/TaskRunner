@@ -15,11 +15,9 @@ public class ScoreboardTR {
 	private Scoreboard board;
 	private Objective obj;
 	
-	private static int ctr = 0;
-	
 	public ScoreboardTR(PlayerTR player) {
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
-		obj = board.registerNewObjective("taskRun" + ++ctr, "dummy");
+		obj = board.registerNewObjective("taskRun", "dummy");
 		obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Task Board");
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
@@ -42,8 +40,10 @@ public class ScoreboardTR {
 		obj.getScore(" ").setScore(ctr - 1);
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			obj.getScore(ChatColor.AQUA + pl.getName() + " " + ChatColor.YELLOW + player.getFinishedTasks() + "/" + (TaskRun.currentGame.getTotalTasksToFinish())).setScore(ctr++);
+			obj.getScore(ChatColor.AQUA + pl.getName() + " " + ChatColor.YELLOW + TaskRun.getPlayer(pl).getFinishedTasks() + "/" + (TaskRun.currentGame.getTotalTasksToFinish())).setScore(ctr++);
 		}
+		
+		// Code for player name/scores being displayed below task list
 		
 		/*int ctr = Bukkit.getOnlinePlayers().size();
 		
