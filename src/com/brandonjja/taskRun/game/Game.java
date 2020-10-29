@@ -22,6 +22,7 @@ public class Game {
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
 	private int totalTasksToFinish = 5;
+	private static Random random = new Random();
 	
 	private static int chickenTaskID = -1;
 	
@@ -59,16 +60,15 @@ public class Game {
 		chickenTaskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(TaskRun.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				Random random = new Random();
 				for (Player pl : Bukkit.getOnlinePlayers()) {
-					for (Entity entity : pl.getNearbyEntities(20, 20, 20)) {
+					for (Entity entity : pl.getNearbyEntities(30, 30, 30)) {
 						if (!(entity.getType().equals(EntityType.CHICKEN))) continue;
 						
 						Chicken chicken = (Chicken) entity;
 						
 						if (!chicken.isAdult()) continue;
 						
-						if (random.nextInt(10) < 2) {
+						if (random.nextInt(10) < 1) {
 							pl.getWorld().dropItem(entity.getLocation(), new ItemStack(Material.EGG));
 							pl.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2, 1);
 						}
