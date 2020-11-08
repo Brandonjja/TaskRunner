@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.tasks.TR_Task;
 
 public class Game {
 	int players;

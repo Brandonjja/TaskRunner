@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.game.PlayerTR;
-import com.brandonjja.taskRun.tasks.TR_Task;
+import com.brandonjja.taskRun.game.TR_Task;
 
 public class TaskListeners implements Listener {
 	

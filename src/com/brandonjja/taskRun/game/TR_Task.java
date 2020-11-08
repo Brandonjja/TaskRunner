@@ -1,4 +1,4 @@
-package com.brandonjja.taskRun.tasks;
+package com.brandonjja.taskRun.game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.game.PlayerTR;
 
 public class TR_Task {
 	private static Map<Integer, String> descriptions; // Key = id, String = description of task to do

@@ -9,8 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.tasks.ScoreboardTR;
-import com.brandonjja.taskRun.tasks.TR_Task;
 
 public class PlayerTR {
 	private Player player;

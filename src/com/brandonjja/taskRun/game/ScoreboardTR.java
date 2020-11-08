@@ -1,4 +1,4 @@
-package com.brandonjja.taskRun.tasks;
+package com.brandonjja.taskRun.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,7 +9,6 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.game.PlayerTR;
 
 public class ScoreboardTR {
 	private Scoreboard board;

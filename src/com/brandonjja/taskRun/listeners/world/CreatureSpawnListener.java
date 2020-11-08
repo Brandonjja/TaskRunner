@@ -21,4 +21,14 @@ public class CreatureSpawnListener implements Listener {
 			}
 		}
 	}
+	
+	// Halloween Code
+	/*@EventHandler
+	public void onSpawn(EntitySpawnEvent e) {
+		if (e.getEntity() instanceof LivingEntity) {
+			LivingEntity en = (LivingEntity) e.getEntity();
+			en.getEquipment().setHelmet(new ItemStack(Material.PUMPKIN));
+			en.getEquipment().setHelmetDropChance(0);
+		}
+	}*/
 }
