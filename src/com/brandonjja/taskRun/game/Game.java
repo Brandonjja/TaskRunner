@@ -15,19 +15,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.brandonjja.taskRun.TaskRun;
+import com.brandonjja.taskRun.nms.NMSUtils;
 
 public class Game {
 	int players;
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
-	private int totalTasksToFinish = 5;
+	private int totalTasksToFinish = 2;
 	private static Random random = new Random();
+	private boolean gameOver;
 	
 	private static int chickenTaskID = -1;
 	
 	public Game() {
 		usingIDS = new ArrayList<>();
 		taskList = new ArrayList<>();
+		gameOver = false;
 		while (usingIDS.size() < totalTasksToFinish) {
 			int id;
 			Random random = new Random();
@@ -56,6 +59,7 @@ public class Game {
 			Bukkit.getScheduler().cancelTask(chickenTaskID);
 		}
 		
+		// Increase the drop rate of chickens
 		chickenTaskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(TaskRun.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
@@ -100,9 +104,31 @@ public class Game {
 	}
 	
 	public void triggerEndGame(Player winner) {
+		String newGameMsg = ChatColor.YELLOW + "To begin a new game, type " + ChatColor.AQUA + "/newgame";
+		if (gameOver) {
+			String gameCompletedMsg = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + ChatColor.ITALIC + winner.getName() + ChatColor.GOLD + "" + ChatColor.ITALIC + " has completed all tasks!";
+			for (Player pl : Bukkit.getOnlinePlayers()) {
+				pl.sendMessage(gameCompletedMsg);
+				pl.sendMessage(newGameMsg);
+			}
+			return;
+		}
+		
+		gameOver = true;
+		
+		String gameWonMsg = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + ChatColor.ITALIC + winner.getName() + ChatColor.GOLD + "" + ChatColor.ITALIC + " has won the game!";
+		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			pl.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + ChatColor.ITALIC + winner.getName() + ChatColor.GOLD + "" + ChatColor.ITALIC + " has won the game!");
-			pl.sendMessage(ChatColor.YELLOW + "To begin a new game, type " + ChatColor.AQUA + "/newgame");
+			pl.sendMessage(gameWonMsg);
+			pl.sendMessage(newGameMsg);
+			pl.playSound(pl.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+			
+			sendGameOverTitle(pl, winner);
 		}
 	}
+	
+	private void sendGameOverTitle(Player player, Player winner) {
+		NMSUtils.sendTitleMessage(player, "Game Over", ChatColor.GOLD + "Winner: " + ChatColor.LIGHT_PURPLE + winner.getPlayer().getName());
+	}
+	
 }
