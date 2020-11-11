@@ -6,7 +6,10 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.brandonjja.taskRun.TaskRun;
 
@@ -18,12 +21,14 @@ public class PlayerTR {
 	private boolean hasScoreboard;
 	private boolean enteredNether;
 	private Location location;
+	private int emeraldsCollected;
 	
 	public PlayerTR(Player player) {
 		this.player = player;
 		this.totalTasksCompleted = 0;
 		this.hasScoreboard = true;
 		this.enteredNether = false;
+		this.emeraldsCollected = 0;
 	}
 	
 	public PlayerTR(Player player, List<TR_Task> taskList) {
@@ -31,6 +36,7 @@ public class PlayerTR {
 		this.totalTasksCompleted = 0;
 		this.hasScoreboard = true;
 		this.enteredNether = false;
+		this.emeraldsCollected = 0;
 		setTaskList(taskList);
 	}
 	
@@ -38,10 +44,20 @@ public class PlayerTR {
 		return player;
 	}
 	
+	/**
+	 * Updates the player object, used when a player relogs
+	 * 
+	 * @param player
+	 */
 	public void updatePlayer(Player player) {
 		this.player = player;
 	}
 	
+	/**
+	 * Creates a list of given tasks to complete for a game
+	 * 
+	 * @param taskList
+	 */
 	public void setTaskList(List<TR_Task> taskList) {
 		this.taskList = new ArrayList<>();
 		for (TR_Task task : taskList) {
@@ -51,6 +67,12 @@ public class PlayerTR {
 		resetTasksCompleted();
 	}
 	
+	/**
+	 * Takes the list of tasks for a current game and returns a formatted
+	 * String displaying the player's current progress
+	 * 
+	 * @return a formatted String of current tasks
+	 */
 	public String getTaskListString() {
 		if (taskList == null) {
 			player.sendMessage(ChatColor.RED + "Error");
@@ -68,30 +90,35 @@ public class PlayerTR {
 		return sb.toString();
 	}
 	
+	/** Increase the total number of tasks completed by 1 */
 	public void finishTask() {
 		totalTasksCompleted++;
 	}
 	
+	/** Check to see if the player completed all their tasks, to win the game */
 	public void checkEndGame() {
 		if (totalTasksCompleted == TaskRun.currentGame.getTotalTasksToFinish()) {
 			TaskRun.currentGame.triggerEndGame(player);
 		}
 	}
 	
+	/** Returns the total number of tasks completed */
 	public int getFinishedTasks() {
 		return totalTasksCompleted;
 	}
 	
+	/** Resets the total number of tasks completed to zero */
 	private void resetTasksCompleted() {
 		totalTasksCompleted = 0;
 	}
 	
+	/** Returns the player's list of tasks */
 	public List<TR_Task> getTaskList() {
 		return taskList;
 	}
 	
+	/** Increases the completion of a task by 1 */
 	public void completeTask(int id) {
-
 		Game game = TaskRun.currentGame;
 		if (game == null) {
 			return;
@@ -107,8 +134,13 @@ public class PlayerTR {
 		}
 	}
 
+	/**
+	 * Decreases the completion of a task by the specified amount
+	 * 
+	 * @param id the number ID of the task to remove progress from
+	 * @param howMuch the amount to decrease by
+	 */
 	public void removeTaskProgress(int id, int howMuch) {
-		
 		Game game = TaskRun.currentGame;
 		if (game == null) {
 			return;
@@ -124,6 +156,12 @@ public class PlayerTR {
 		}
 	}
 	
+	/**
+	 * Sets the Scoreboard for the player. Used to assign a new Scoreboard, and to toggle the Scoreboard on/off
+	 * 
+	 * @param newGame set true if there is not a game running, otherwise set false
+	 * @param toggle set true if the Scoreboard is being toggled through a command, otherwise set false
+	 */
 	public void setNewScoreboard(boolean newGame, boolean toggle) {
 		if (!newGame && board != null && toggle) {
 			if (hasScoreboard) {
@@ -140,6 +178,12 @@ public class PlayerTR {
 		return board;
 	}
 	
+	/**
+	 * Updates the progress of a given task on the Scoreboard
+	 * 
+	 * @param task the task to update
+	 * @param oldScore the old progress of the task
+	 */
 	public void updateScoreboard(TR_Task task, int oldScore) {
 		board.updateTask(task, player, oldScore);
 	}
@@ -166,5 +210,37 @@ public class PlayerTR {
 	
 	public Location getLocation() {
 		return location;
+	}
+	
+	public int getEmeraldsCollected() {
+		return emeraldsCollected;
+	}
+	
+	public void addEmeraldCollected() {
+		emeraldsCollected++;
+		
+		if (emeraldsCollected == 3) {
+			String msg = ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has collected 3 emeralds and was rewarded a diamond!";
+			for (Player pl : Bukkit.getOnlinePlayers()) {
+				pl.sendMessage(msg);
+				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
+			}
+			if (player.getInventory().firstEmpty() == -1 && !player.getInventory().contains(Material.DIAMOND)) {
+				player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.DIAMOND));
+				player.sendMessage(ChatColor.RED + "Your inventory was full, so your diamond was dropped on the ground");
+			} else {
+				player.getInventory().addItem(new ItemStack(Material.DIAMOND));
+			}
+			emeraldsCollected = 0;
+		} else {
+			player.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "You have collected: " + emeraldsCollected + " emerald(s).. maybe you should find more!");
+		}
+		
+	}
+	
+	public void removeEmeraldCollected() {
+		if (emeraldsCollected > 0) {
+			emeraldsCollected--;
+		}
 	}
 }

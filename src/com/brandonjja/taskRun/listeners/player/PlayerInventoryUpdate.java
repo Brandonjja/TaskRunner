@@ -17,16 +17,24 @@ public class PlayerInventoryUpdate implements Listener {
 	public void onItemPickup(PlayerPickupItemEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getPlayer());
 		ItemStack item = e.getItem().getItemStack();
-		if (item.getType() == Material.OBSIDIAN) {
+		Material itemType = item.getType();
+		
+		if (itemType == Material.OBSIDIAN) {
 			int ctr = item.getAmount();
 			do {
 				trPlayer.completeTask(3);
 			} while (--ctr > 0);
-		} else if (item.getType() == Material.BLAZE_ROD) {
+		} else if (itemType == Material.BLAZE_ROD) {
 			int ctr = item.getAmount();
 			do {
 				trPlayer.completeTask(12);
 			} while (--ctr > 0);
+		} else if (itemType == Material.EMERALD) {
+			for (int i = 0; i < item.getAmount(); i++) {
+				trPlayer.addEmeraldCollected();
+			}
+			e.getItem().remove();
+			e.setCancelled(true);
 		}
 	}
 
@@ -34,9 +42,11 @@ public class PlayerInventoryUpdate implements Listener {
 	public void onItemDrop(PlayerDropItemEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getPlayer());
 		ItemStack item = e.getItemDrop().getItemStack();
-		if (item.getType() == Material.OBSIDIAN) {
+		Material itemType = item.getType();
+		
+		if (itemType == Material.OBSIDIAN) {
 			trPlayer.removeTaskProgress(3, item.getAmount());
-		} else if (item.getType() == Material.BLAZE_ROD) {
+		} else if (itemType == Material.BLAZE_ROD) {
 			trPlayer.removeTaskProgress(12, item.getAmount());
 		}
 	}
