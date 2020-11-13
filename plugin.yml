@@ -1,8 +1,8 @@
-name: TaskRun
+name: TaskRunner
 version: 1.0
 main: com.brandonjja.taskRun.TaskRun
 author: Brandonjja
-description: TaskRun
+description: TaskRunner
 commands:
     newgame:
         usage: /newgame
