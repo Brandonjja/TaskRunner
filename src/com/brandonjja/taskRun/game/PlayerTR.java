@@ -20,6 +20,8 @@ public class PlayerTR {
 	private ScoreboardTR board = null;
 	private boolean hasScoreboard;
 	private boolean enteredNether;
+	private boolean gotBlazeRods;
+	private boolean gotDiamonds;
 	private Location location;
 	private int emeraldsCollected;
 	
@@ -28,6 +30,7 @@ public class PlayerTR {
 		this.totalTasksCompleted = 0;
 		this.hasScoreboard = true;
 		this.enteredNether = false;
+		this.gotBlazeRods = false;
 		this.emeraldsCollected = 0;
 	}
 	
@@ -36,6 +39,7 @@ public class PlayerTR {
 		this.totalTasksCompleted = 0;
 		this.hasScoreboard = true;
 		this.enteredNether = false;
+		this.gotBlazeRods = false;
 		this.emeraldsCollected = 0;
 		setTaskList(taskList);
 	}
@@ -196,12 +200,34 @@ public class PlayerTR {
 		hasScoreboard = !hasScoreboard;
 	}
 	
+	/** true if the player has ever entered the Nether */
 	public boolean hasEnteredNether() {
 		return enteredNether;
 	}
 	
+	/** set to true when the player enters the Nether for the first time */
 	public void enterNether() {
 		enteredNether = true;
+	}
+	
+	/** true if the player has ever picked up a Blaze Rod */
+	public boolean hasGottenBlazeRod() {
+		return gotBlazeRods;
+	}
+	
+	/** set to true when the player picks up their first Blaze Rod */
+	public void pickupBlazeRod() {
+		gotBlazeRods = true;
+	}
+	
+	/** true if the player has ever picked up diamonds */
+	public boolean hasDiamonds() {
+		return gotDiamonds;
+	}
+	
+	/** set to true when the player picks up their first diamond */
+	public void pickupDiamonds() {
+		gotDiamonds = true;
 	}
 	
 	public void saveLocation(Location location) {

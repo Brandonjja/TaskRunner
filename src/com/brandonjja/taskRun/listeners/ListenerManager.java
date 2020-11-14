@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.commands.handler.BackCommand;
 import com.brandonjja.taskRun.commands.handler.PauseCommand;
+import com.brandonjja.taskRun.listeners.player.PlayerAchievementListener;
 import com.brandonjja.taskRun.listeners.player.PlayerConnectionListener;
 import com.brandonjja.taskRun.listeners.player.PlayerCraftListener;
 import com.brandonjja.taskRun.listeners.player.PlayerDeathListener;
@@ -18,6 +19,7 @@ import com.brandonjja.taskRun.listeners.world.EntityTameListener;
 
 public class ListenerManager {
 	public static void registerListeners() {
+		register(new PlayerAchievementListener());
 		register(new PlayerConnectionListener());
 		register(new PlayerCraftListener());
 		register(new PlayerDeathListener());
