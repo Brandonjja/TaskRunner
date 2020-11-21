@@ -1,6 +1,7 @@
 package com.brandonjja.taskRun.commands.handler;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import com.brandonjja.taskRun.TaskRun;
@@ -15,6 +16,7 @@ public class NewGameCommand extends TaskRunCommand {
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			TaskRun.getPlayer(pl).setNewScoreboard(true, false);
+			pl.playSound(pl.getLocation(), Sound.WITHER_SPAWN, 1, 1);
 		}
 		
 		return true;
