@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import com.brandonjja.taskRun.TaskRun;
@@ -12,112 +13,87 @@ import com.brandonjja.taskRun.TaskRun;
 public class TR_Task {
 	private static Map<Integer, String> descriptions; // Key = id, String = description of task to do
 	private static Map<Integer, Integer> neededCompletions; // Key = id, Value = # of times to complete
-	private static int ctr = -1;
 	//private static List<Integer> usingIDs = new ArrayList<>();
 	
+	// A list of all task IDs, descriptions, and completions needed
 	static {
 		descriptions = new HashMap<>();
 		neededCompletions = new HashMap<>();
 		
-		++ctr;
-		descriptions.put(ctr, "Make a Bed"); // id = 0
-		neededCompletions.put(ctr, 1);
+		descriptions.put(0, "Make a Bed"); // id = 0
+		neededCompletions.put(0, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Travel to The Nether"); // id = 1
-		neededCompletions.put(ctr, 1);
+		descriptions.put(1, "Travel to The Nether"); // id = 1
+		neededCompletions.put(1, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Grow a Tree with Bonemeal"); // id = 2
-		neededCompletions.put(ctr, 1);
+		descriptions.put(2, "Grow a Tree with Bonemeal"); // id = 2
+		neededCompletions.put(2, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Gather 8 Obsidian"); // id = 3
-		neededCompletions.put(ctr, 8);
+		descriptions.put(3, "Gather 8 Obsidian"); // id = 3
+		neededCompletions.put(3, 8);
 		
-		++ctr;
-		descriptions.put(ctr, "Kill 5 Zombie Pigmen"); // id = 4
-		neededCompletions.put(ctr, 5);
+		descriptions.put(4, "Kill 5 Zombie Pigmen"); // id = 4
+		neededCompletions.put(4, 5);
 		
-		++ctr;
-		descriptions.put(ctr, "Catch 2 Fish"); // id = 5
-		neededCompletions.put(ctr, 2);
+		descriptions.put(5, "Catch 2 Fish"); // id = 5
+		neededCompletions.put(5, 2);
 		
-		++ctr;
-		descriptions.put(ctr, "Milk a Cow"); // id = 6
-		neededCompletions.put(ctr, 1);
+		descriptions.put(6, "Milk a Cow"); // id = 6
+		neededCompletions.put(6, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Throw 128 Snowballs"); // id = 7
-		neededCompletions.put(ctr, 128);
+		descriptions.put(7, "Throw 128 Snowballs"); // id = 7
+		neededCompletions.put(7, 128);
 		
-		++ctr;
-		descriptions.put(ctr, "Stand on Bedrock"); // id = 8
-		neededCompletions.put(ctr, 1);
+		descriptions.put(8, "Stand on Bedrock"); // id = 8
+		neededCompletions.put(8, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Build to Height Limit"); // id = 9
-		neededCompletions.put(ctr, 1);
+		descriptions.put(9, "Build to Height Limit"); // id = 9
+		neededCompletions.put(9, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Kill 15 Creepers"); // id = 10
-		neededCompletions.put(ctr, 15);
+		descriptions.put(10, "Kill 15 Creepers"); // id = 10
+		neededCompletions.put(10, 15);
 		
-		++ctr;
-		descriptions.put(ctr, "Build a Snowman"); // id = 11
-		neededCompletions.put(ctr, 1);
+		descriptions.put(11, "Build a Snowman"); // id = 11
+		neededCompletions.put(11, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Collect 10 Blaze Rods"); // id = 12
-		neededCompletions.put(ctr, 10);
+		descriptions.put(12, "Collect 10 Blaze Rods"); // id = 12
+		neededCompletions.put(12, 10);
 		
-		++ctr;
-		descriptions.put(ctr, "Stand on a Diamond Block"); // id = 13
-		neededCompletions.put(ctr, 1);
+		descriptions.put(13, "Stand on a Diamond Block"); // id = 13
+		neededCompletions.put(13, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Kill a Ghast"); // id = 14
-		neededCompletions.put(ctr, 1);
+		descriptions.put(14, "Kill a Ghast"); // id = 14
+		neededCompletions.put(14, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Shear 10 Sheep"); // id = 15
-		neededCompletions.put(ctr, 10);
+		descriptions.put(15, "Shear 10 Sheep"); // id = 15
+		neededCompletions.put(15, 10);
 		
-		++ctr;
-		descriptions.put(ctr, "Break 20 Glowstone"); // id = 16
-		neededCompletions.put(ctr, 20);
+		descriptions.put(16, "Break 20 Glowstone"); // id = 16
+		neededCompletions.put(16, 20);
 		
-		++ctr;
-		descriptions.put(ctr, "Die from Lava"); // id = 17
-		neededCompletions.put(ctr, 1);
+		descriptions.put(17, "Die from Lava"); // id = 17
+		neededCompletions.put(17, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Mine 64 Quartz Ore Blocks"); // id = 18
-		neededCompletions.put(ctr, 64);
+		descriptions.put(18, "Mine 64 Quartz Ore Blocks"); // id = 18
+		neededCompletions.put(18, 64);
 		
-		++ctr;
-		descriptions.put(ctr, "Enchant a Golden Shovel"); // id = 19
-		neededCompletions.put(ctr, 1);
+		descriptions.put(19, "Enchant a Golden Shovel"); // id = 19
+		neededCompletions.put(19, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Run to X: 512"); // id = 20
-		neededCompletions.put(ctr, 1);
+		descriptions.put(20, "Run to X: 512"); // id = 20
+		neededCompletions.put(20, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Bake a Cake"); // id = 21
-		neededCompletions.put(ctr, 1);
+		descriptions.put(21, "Bake a Cake"); // id = 21
+		neededCompletions.put(21, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Eat 10 Raw Chicken"); // id = 22
-		neededCompletions.put(ctr, 10);
+		descriptions.put(22, "Eat 10 Raw Chicken"); // id = 22
+		neededCompletions.put(22, 10);
 		
-		++ctr;
-		descriptions.put(ctr, "Make a Gapple"); // id = 23
-		neededCompletions.put(ctr, 1);
+		descriptions.put(23, "Make a Gapple"); // id = 23
+		neededCompletions.put(23, 1);
 		
-		++ctr;
-		descriptions.put(ctr, "Break 256 Netherrack"); // id = 24
-		neededCompletions.put(ctr, 256);
+		descriptions.put(24, "Break 256 Netherrack"); // id = 24
+		neededCompletions.put(24, 256);
 		
 	}
 	
@@ -160,10 +136,17 @@ public class TR_Task {
 		return taskID;
 	}
 	
+	/** Returns the total number of possible tasks */
 	public static int getTotalTaskSize() {
 		return descriptions.size();
 	}
 	
+	/**
+	 * Increases the completion of a task by 1
+	 * 
+	 * @param player a playerTR instance
+	 * @param id the ID number of the task to complete
+	 */
 	public void completeTask(PlayerTR player, int id) {
 		
 		// If the task id is not being used in the current game, return
@@ -185,6 +168,13 @@ public class TR_Task {
 		}
 	}
 	
+	/**
+	 * Decreases the completion of a task by the specified amount
+	 * 
+	 * @param player a playerTR instance
+	 * @param id the ID number of the task to remove progress from
+	 * @param howMuch the amount to decrease by
+	 */
 	public void removeTaskProgress(PlayerTR player, int id, int howMuch) {
 		
 		// If the task id is not being used in the current game, return
@@ -198,6 +188,7 @@ public class TR_Task {
 		
 		int oldCompleted = completed;
 		
+		// Don't decrease the progress below zero
 		if (completed > 0) {
 			if (completed - howMuch < 0) {
 				completed = 0;
@@ -208,12 +199,19 @@ public class TR_Task {
 		}
 	}
 	
+	/**
+	 * Displays a message in chat for all players when a player completes a task
+	 * 
+	 * @param player
+	 * @param id
+	 */
 	public void announceTaskComplete(Player player, int id) {
 		PlayerTR trPlayer = TaskRun.getPlayer(player);
 		trPlayer.finishTask();
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			pl.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.GREEN +  " has completed \"" + descriptions.get(id) + "\"");
 			pl.sendMessage(ChatColor.GOLD + "Tasks completed: " + trPlayer.getFinishedTasks() + "/" + TaskRun.currentGame.getTotalTasksToFinish());
+			pl.playSound(pl.getLocation(), Sound.FIREWORK_LARGE_BLAST, 1, 1);
 		}
 		trPlayer.checkEndGame();
 	}
