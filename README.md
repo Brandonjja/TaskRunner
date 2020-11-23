@@ -25,4 +25,4 @@ Command | Description
 /toggletasks | Toggles the side task bar
 /tt | Toggles the side task bar
 /back | Teleports you to your previous location after TPing
-/pause | Pause or unpauses the game
+/pause | Pauses or unpauses the game
