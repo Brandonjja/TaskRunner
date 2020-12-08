@@ -3,6 +3,8 @@ TaskRunner is a Minecraft minigame where you race to finish a list of objectives
 Tasks can be completed in any order, so long as you complete all of them before everyone else! You are to complete these tasks in a survival world, collecting
 resources to assist you.
 
+**YouTube Showcase:** https://youtu.be/z2pOCypmZLw
+
 ## Gameplay Snapshots
 
 Task Board located on the right:
