@@ -45,6 +45,11 @@ public class TaskRun extends JavaPlugin {
 		return plugin;
 	}
 	
+	/**
+	 * Adds a player to the game player list, and assigns a scoreboard if necessary
+	 * 
+	 * @param player
+	 */
 	public static void addPlayer(Player player) {
 		if (!playerList.containsKey(player.getName())) {
 			PlayerTR trPlayer;
@@ -61,11 +66,22 @@ public class TaskRun extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Retrieves a player from the player list
+	 * 
+	 * @param player
+	 * @return PlayerTR object for the player
+	 */
 	public static PlayerTR getPlayer(Player player) {
 		if (playerList.containsKey(player.getName())) {
 			return playerList.get(player.getName());
 		}
 		return null;
+	}
+	
+	/** Removes the Player object from PlayerTR for GC */
+	public static void removePlayer(Player player) {
+		playerList.get(player.getName()).updatePlayer(null);
 	}
 	
 	

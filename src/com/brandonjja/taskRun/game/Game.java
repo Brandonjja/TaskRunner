@@ -21,7 +21,7 @@ public class Game {
 	int players;
 	private List<Integer> usingIDS;
 	private List<TR_Task> taskList;
-	private int totalTasksToFinish = 2;
+	private int totalTasksToFinish = 5;
 	private static Random random = new Random();
 	private boolean gameOver;
 	
