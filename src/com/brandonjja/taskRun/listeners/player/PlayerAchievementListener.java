@@ -25,6 +25,10 @@ public class PlayerAchievementListener implements Listener {
 			if (trPlayer.hasGottenBlazeRod()) {
 				e.setCancelled(true);
 			}
+		} else if (achievement == Achievement.GET_DIAMONDS) {
+			if (trPlayer.hasDiamonds()) {
+				e.setCancelled(true);
+			}
 		}
 	}
 }
