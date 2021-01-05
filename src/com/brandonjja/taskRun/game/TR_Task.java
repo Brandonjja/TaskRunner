@@ -95,6 +95,21 @@ public class TR_Task {
 		descriptions.put(24, "Break 256 Netherrack"); // id = 24
 		neededCompletions.put(24, 256);
 		
+		descriptions.put(25, "Light TNT with Flint"); // id = 25
+		neededCompletions.put(25, 1);
+		
+		descriptions.put(26, "Get to Level 15"); // id = 26
+		neededCompletions.put(26, 1);
+		
+		descriptions.put(27, "Eat 2 Mushroom Soup"); // id = 27
+		neededCompletions.put(27, 2);
+		
+		descriptions.put(28, "Get to Y: 1 in the Nether"); // id = 28
+		neededCompletions.put(28, 1);
+		
+		descriptions.put(29, "Kill 2 Wither Skeletons"); // id = 29
+		neededCompletions.put(29, 2);
+		
 	}
 	
 	int taskID;
