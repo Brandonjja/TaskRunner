@@ -1,5 +1,6 @@
 package com.brandonjja.taskRun.listeners.tasks;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Cow;
@@ -10,6 +11,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,6 +26,7 @@ import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -75,6 +79,10 @@ public class TaskListeners implements Listener {
 			trPlayer.completeTask(10);
 		} else if (entityKilled instanceof Ghast) {
 			trPlayer.completeTask(14);
+		} else if (entityKilled instanceof Skeleton) {
+			if (((Skeleton) entityKilled).getSkeletonType() == SkeletonType.WITHER) {
+				trPlayer.completeTask(29);
+			}
 		}
 	}
 	
@@ -114,16 +122,39 @@ public class TaskListeners implements Listener {
 	}
 	
 	@EventHandler
-	public void onStandOnBlock(PlayerMoveEvent e) {
+	public void onTNTLight(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getLocation().add(0, -1, 0).getBlock().getType() == Material.BEDROCK) {
-			trPlayer.completeTask(8);
-		} else if (player.getLocation().add(0, -1, 0).getBlock().getType() == Material.DIAMOND_BLOCK) {
-			trPlayer.completeTask(13);
+		if (player.getItemInHand() != null && player.getItemInHand().getType() == Material.FLINT_AND_STEEL && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (e.getClickedBlock().getType() == Material.TNT && !player.isSneaking()) {
+				trPlayer.completeTask(25);
+			}
 		}
 	}
 	
+	@EventHandler
+	public void onXP(PlayerLevelChangeEvent e) {
+		if (e.getNewLevel() >= 15) {
+			TaskRun.getPlayer(e.getPlayer()).completeTask(26);
+		}
+	}
+	
+	@EventHandler
+	public void onStandOnBlock(PlayerMoveEvent e) {
+		Player player = e.getPlayer();
+		PlayerTR trPlayer = TaskRun.getPlayer(player);
+		Location playerLocation = player.getLocation();
+		Location locationSub1 = new Location(playerLocation.getWorld(), playerLocation.getX(), playerLocation.getY() - 1, playerLocation.getZ());
+		if (locationSub1.getBlock().getType() == Material.BEDROCK) {
+			trPlayer.completeTask(8);
+		} else if (locationSub1.getBlock().getType() == Material.DIAMOND_BLOCK) {
+			trPlayer.completeTask(13);
+		}
+		if (playerLocation.getWorld().getEnvironment() == Environment.NETHER && playerLocation.getBlockY() == 1) {
+			trPlayer.completeTask(28);
+		}
+	}
+
 	@EventHandler
 	public void onBuildLimitReached(PlayerMoveEvent e) {
 		Player player = e.getPlayer();
@@ -201,6 +232,16 @@ public class TaskListeners implements Listener {
 				return;
 			}
 			TaskRun.getPlayer(e.getPlayer()).completeTask(22);
+		}
+	}
+	
+	@EventHandler
+	public void onEatStew(PlayerItemConsumeEvent e) {
+		if (e.getItem().getType() == Material.MUSHROOM_SOUP) {
+			if (e.isCancelled()) {
+				return;
+			}
+			TaskRun.getPlayer(e.getPlayer()).completeTask(27);
 		}
 	}
 }
