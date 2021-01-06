@@ -27,6 +27,9 @@ public class Game {
 	
 	private static int chickenTaskID = -1;
 	
+	private final String newGameString = ChatColor.GREEN + "A new " + ChatColor.GOLD + "Task Runner" + ChatColor.GREEN + " game has started. Goodluck!";
+	private final String viewTasksString = ChatColor.GREEN + "You can do " + ChatColor.AQUA + "/tasks" + ChatColor.GREEN + " to view your tasks.";
+	
 	public Game() {
 		usingIDS = new ArrayList<>();
 		taskList = new ArrayList<>();
@@ -44,8 +47,8 @@ public class Game {
 		}
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			pl.sendMessage(ChatColor.GREEN + "A new " + ChatColor.GOLD + "Task Runner" + ChatColor.GREEN + " game has started. Goodluck!");
-			pl.sendMessage(ChatColor.GREEN + "You can do " + ChatColor.AQUA + "/tasks" + ChatColor.GREEN + " to view your tasks.");
+			pl.sendMessage(newGameString);
+			pl.sendMessage(viewTasksString);
 			PlayerTR trPlayer = TaskRun.getPlayer(pl);
 			trPlayer.setTaskList(taskList);
 			
