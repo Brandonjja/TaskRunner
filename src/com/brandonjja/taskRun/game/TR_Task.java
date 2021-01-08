@@ -98,7 +98,7 @@ public class TR_Task {
 		descriptions.put(25, "Light TNT with Flint"); // id = 25
 		neededCompletions.put(25, 1);
 		
-		descriptions.put(26, "Get to Level 15"); // id = 26
+		descriptions.put(26, "Get to XP Level 15"); // id = 26
 		neededCompletions.put(26, 1);
 		
 		descriptions.put(27, "Eat 2 Mushroom Soup"); // id = 27
