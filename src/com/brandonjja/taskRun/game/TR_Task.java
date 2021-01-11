@@ -110,6 +110,12 @@ public class TR_Task {
 		descriptions.put(29, "Kill 2 Wither Skeletons"); // id = 29
 		neededCompletions.put(29, 2);
 		
+		descriptions.put(30, "Break 64 Glass"); // id = 30
+		neededCompletions.put(30, 64);
+		
+		descriptions.put(31, "Punch 1024 Grass"); // id = 31
+		neededCompletions.put(31, 1024);
+		
 	}
 	
 	int taskID;
