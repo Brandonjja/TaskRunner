@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,7 @@ public class BlockListener implements Listener {
 	
 	private static Random random = new Random();
 	
+	@SuppressWarnings("deprecation") // Magic values
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		Player player = e.getPlayer();
@@ -29,9 +31,23 @@ public class BlockListener implements Listener {
 			trPlayer.completeTask(18);
 		} else if (e.getBlock().getType() == Material.NETHERRACK) {
 			trPlayer.completeTask(24);
+		} else if (e.getBlock().getType() == Material.GLASS) {
+			trPlayer.completeTask(30);
+		} else if (e.getBlock().getType() == Material.LONG_GRASS || e.getBlock().getType() == Material.DOUBLE_PLANT) {
+			if (e.getBlock().getType() == Material.DOUBLE_PLANT) {
+				if (e.getBlock().getData() == (byte) 2) {
+					trPlayer.completeTask(31);
+				} else if (e.getBlock().getData() == (byte) 10) {
+					if (e.getBlock().getRelative(BlockFace.DOWN).getData() == (byte) 2) {
+						trPlayer.completeTask(31);
+					}
+				}
+			} else {
+				trPlayer.completeTask(31);
+			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onLeafBreak(BlockBreakEvent e) {
 		Block block = e.getBlock();
