@@ -1,5 +1,7 @@
 package com.brandonjja.taskRun.listeners.tasks;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -190,7 +192,11 @@ public class TaskListeners implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getEntity());
-		for (TR_Task task : trPlayer.getTaskList()) {
+		List<TR_Task> taskList = trPlayer.getTaskList();
+		if (taskList == null) {
+			return;
+		}
+		for (TR_Task task : taskList) {
 			if (task.getTaskID() == 3 || task.getTaskID() == 12) {
 				task.removeTaskProgress(trPlayer, task.getTaskID(), Integer.MAX_VALUE);
 			}
@@ -202,7 +208,7 @@ public class TaskListeners implements Listener {
 	}
 	
 	@EventHandler
-	public void onEnchantHoe(EnchantItemEvent e) {
+	public void onEnchantItem(EnchantItemEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getEnchanter());
 		if (e.getItem().getType() == Material.GOLD_SPADE) {
 			trPlayer.completeTask(19);
