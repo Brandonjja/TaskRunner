@@ -8,6 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class NMSUtils {
+
+	private final static int fadeIn = 20;
+	private final static int duration = 100;
+	private final static int fadeOut = 20;
 	
 	/**
 	 * Sends a title message to the player
@@ -25,8 +29,12 @@ public class NMSUtils {
 		
 		Object chatSerializer;
 		Object chatSerializerSub;
+
+		Object enumTimes;
 		Object enumTitle;
 		Object enumSubTitle;
+
+		Object packetTimes;
 		Object packetTitleMessage;
 		Object packetSubTitleMessage;
 		
@@ -35,15 +43,18 @@ public class NMSUtils {
 			
 			chatSerializer = a.invoke(iChatBaseCompClass, titleMessage);
 			chatSerializerSub = a.invoke(iChatBaseCompClass, titleSubMessage);
-			
+
+			enumTimes = enumTitleActionClass.getField("TIMES").get(null);
 			enumTitle = enumTitleActionClass.getField("TITLE").get(null);
 			enumSubTitle = enumTitleActionClass.getField("SUBTITLE").get(null);
 			
 			Constructor<?> packetPlayOutTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(enumTitleActionClass, iChatBaseCompClass, int.class, int.class, int.class);
-			
-			packetTitleMessage = packetPlayOutTitleConstructor.newInstance(enumTitle, chatSerializer, 20, 100, 20);
-			packetSubTitleMessage = packetPlayOutTitleConstructor.newInstance(enumSubTitle, chatSerializerSub, 20, 100, 20);
-			
+
+			packetTimes = packetPlayOutTitleConstructor.newInstance(enumTimes, chatSerializer, fadeIn, duration, fadeOut);
+			packetTitleMessage = packetPlayOutTitleConstructor.newInstance(enumTitle, chatSerializer, fadeIn, duration, fadeOut);
+			packetSubTitleMessage = packetPlayOutTitleConstructor.newInstance(enumSubTitle, chatSerializerSub, fadeIn, duration, fadeOut);
+
+			sendPacket(player, packetTimes);
 			sendPacket(player, packetTitleMessage);
 			sendPacket(player, packetSubTitleMessage);
 			
