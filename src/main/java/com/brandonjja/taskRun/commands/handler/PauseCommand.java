@@ -23,6 +23,7 @@ public class PauseCommand extends TaskRunCommand implements Listener {
 
 	@Override
 	public boolean execute(Player player, String[] args) {
+		if (!player.hasPermission("taskrunner.pause")) return true;
 		if (frozen) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				pl.sendMessage(ChatColor.BLUE + "The game has been " + ChatColor.GREEN + ChatColor.BOLD + "unpaused" + ChatColor.BLUE + " by " + player.getName() + ", so you are now " + ChatColor.AQUA + ChatColor.BOLD + "unfrozen!");

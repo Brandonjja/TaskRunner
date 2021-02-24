@@ -12,6 +12,7 @@ public class NewGameCommand extends TaskRunCommand {
 
 	@Override
 	public boolean execute(Player player, String[] args) {
+		if (!player.hasPermission("taskrunner.newgame")) return true;
 		TaskRun.currentGame = new Game();
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {

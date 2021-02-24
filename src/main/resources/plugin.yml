@@ -22,3 +22,15 @@ commands:
     pause:
         usage: /pause
         description: Pause or unpauses the game
+permissions:
+    taskrunner.*:
+        children:
+            taskrunner.newgame: true
+            taskrunner.back: true
+            taskrunner.pause: true
+    taskrunner.newgame:
+        default: op
+    taskrunner.back:
+        default: op
+    taskrunner.pause:
+        default: op

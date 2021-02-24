@@ -15,6 +15,7 @@ public class BackCommand extends TaskRunCommand implements Listener {
 
 	@Override
 	public boolean execute(Player player, String[] args) {
+		if (!player.hasPermission("taskrunner.back")) return true;
 		PlayerTR trPlayer = TaskRun.getPlayer(player);
 		if (trPlayer.getLocation() != null) {
 			Location loc = player.getLocation();
