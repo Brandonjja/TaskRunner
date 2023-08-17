@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class NMSUtils {
@@ -12,6 +13,8 @@ public class NMSUtils {
 	private final static int fadeIn = 20;
 	private final static int duration = 100;
 	private final static int fadeOut = 20;
+
+	private static String version = null;
 	
 	/**
 	 * Sends a title message to the player
@@ -21,8 +24,13 @@ public class NMSUtils {
 	 * @param subMessage the sub message of the title (empty String for no sub message)
 	 */
 	public static void sendTitleMessage(Player player, String message, String subMessage) {
-		String titleMessage = "{\"text\":\"§a" + message + "\"}";
+		String titleMessage = "{\"text\":\"" + ChatColor.GREEN + message + "\"}";
 		String titleSubMessage = "{\"text\":\"" + subMessage + "\"}";
+
+		if (isAtLeastOneTwelve()) {
+			player.sendTitle(ChatColor.GREEN + message, subMessage);
+			return;
+		}
 		
 		Class<?> enumTitleActionClass = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
 		Class<?> iChatBaseCompClass = getNMSClass("IChatBaseComponent");
@@ -85,5 +93,31 @@ public class NMSUtils {
 			ex.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String getVersion() {
+		if (version == null) {
+			version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+		}
+		
+		return version;
+	}
+
+	public static boolean isAtLeastOneNine() {
+		String version = getVersion();
+		int ver = Integer.parseInt(version.split("_")[1]);
+		return ver >= 9;
+	}
+
+	public static boolean isAtLeastOneTwelve() {
+		String version = getVersion();
+		int ver = Integer.parseInt(version.split("_")[1]);
+		return ver >= 12;
+	}
+
+	public static boolean isAtLeastOneThirteen() {
+		String version = getVersion();
+		int ver = Integer.parseInt(version.split("_")[1]);
+		return ver >= 13;
 	}
 }

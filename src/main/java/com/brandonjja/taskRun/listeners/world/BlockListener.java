@@ -11,6 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Leaves;
+import org.bukkit.material.MaterialData;
 import org.bukkit.material.Tree;
 
 import com.brandonjja.taskRun.TaskRun;
@@ -49,15 +51,22 @@ public class BlockListener implements Listener {
 	}
 
 	@EventHandler
-	public void onLeafBreak(BlockBreakEvent e) {
-		Block block = e.getBlock();
-		if (block.getType() == Material.LEAVES) {
-			Tree leaf = (Tree) block.getState().getData();
-			if (leaf.getSpecies() == TreeSpecies.GENERIC) {
-				if (random.nextInt(100) < 5) {
-					block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.APPLE));
-				}
-			}
+	public void onLeafBreak(BlockBreakEvent event) {
+		Block block = event.getBlock();
+		if (block.getType() != Material.LEAVES) {
+			return;
+		}
+
+		MaterialData leaf = block.getState().getData();
+		boolean shouldTryDrop = false;
+		if (leaf instanceof Leaves && ((Leaves) leaf).getSpecies() == TreeSpecies.GENERIC) {
+			shouldTryDrop = true;
+		} else if (leaf instanceof Tree && ((Tree) leaf).getSpecies() == TreeSpecies.GENERIC) {
+			shouldTryDrop = true;
+		}
+
+		if (shouldTryDrop && random.nextInt(100) < 5) {
+			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.APPLE));
 		}
 	}
 }

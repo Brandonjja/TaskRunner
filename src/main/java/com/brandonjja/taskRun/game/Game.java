@@ -76,7 +76,11 @@ public class Game {
 						
 						if (random.nextInt(10) < 1) {
 							pl.getWorld().dropItem(entity.getLocation(), new ItemStack(Material.EGG));
-							pl.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2, 1);
+							if (NMSUtils.isAtLeastOneNine()) {
+								pl.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_CHICKEN_EGG"), 2, 1);
+							} else {
+								pl.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2, 1);
+							}
 						}
 						
 					}
@@ -124,7 +128,13 @@ public class Game {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			pl.sendMessage(gameWonMsg);
 			pl.sendMessage(newGameMsg);
-			pl.playSound(pl.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+			if (NMSUtils.isAtLeastOneThirteen()) {
+				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_ENDER_DRAGON_GROWL"), 1, 1);
+			} else if (NMSUtils.isAtLeastOneNine()) {
+				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_ENDERDRAGON_GROWL"), 1, 1);
+			} else {
+				pl.playSound(pl.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+			}
 			
 			sendGameOverTitle(pl, winner);
 		}

@@ -1,5 +1,6 @@
 package com.brandonjja.taskRun.listeners.player;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +20,10 @@ public class PlayerTravelToNether implements Listener {
 		Player player = e.getPlayer();
 		PlayerTR trPlayer = TaskRun.getPlayer(player);
 		//e.getPlayer().awardAchievement(Achievement.NETHER_PORTAL);
+
+		if (NMSUtils.isAtLeastOneTwelve()) {
+			return;
+		}
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			if (e.getTo().getWorld().getName().contains("nether") && !player.hasAchievement(Achievement.NETHER_PORTAL) && !trPlayer.hasEnteredNether()) {

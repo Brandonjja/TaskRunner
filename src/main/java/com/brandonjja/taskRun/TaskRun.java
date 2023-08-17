@@ -2,6 +2,7 @@ package com.brandonjja.taskRun;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ import com.brandonjja.taskRun.listeners.ListenerManager;
 public class TaskRun extends JavaPlugin {
 	
 	private static TaskRun plugin;
-	public static Map<String, PlayerTR> playerList;
+	public static Map<UUID, PlayerTR> playerList;
 	public static Game currentGame;
 	
 	@Override
@@ -51,14 +52,14 @@ public class TaskRun extends JavaPlugin {
 	 * @param player
 	 */
 	public static void addPlayer(Player player) {
-		if (!playerList.containsKey(player.getName())) {
+		if (!playerList.containsKey(player.getUniqueId())) {
 			PlayerTR trPlayer;
 			if (currentGame != null) {
 				trPlayer = new PlayerTR(player, currentGame.getTaskList());
 			} else {
 				trPlayer = new PlayerTR(player);
 			}
-			playerList.put(player.getName(), trPlayer);
+			playerList.put(player.getUniqueId(), trPlayer);
 		} else {
 			PlayerTR trPlayer = getPlayer(player);
 			trPlayer.updatePlayer(player);
@@ -73,15 +74,18 @@ public class TaskRun extends JavaPlugin {
 	 * @return PlayerTR object for the player
 	 */
 	public static PlayerTR getPlayer(Player player) {
-		if (playerList.containsKey(player.getName())) {
-			return playerList.get(player.getName());
+		PlayerTR playerTR = playerList.get(player.getUniqueId());
+		if (playerTR == null) {
+			addPlayer(player);
+			playerTR = playerList.get(player.getUniqueId());
 		}
-		return null;
+
+		return playerTR;
 	}
 	
 	/** Removes the Player object from PlayerTR for GC */
 	public static void removePlayer(Player player) {
-		playerList.get(player.getName()).updatePlayer(null);
+		playerList.get(player.getUniqueId()).updatePlayer(null);
 	}
 	
 	

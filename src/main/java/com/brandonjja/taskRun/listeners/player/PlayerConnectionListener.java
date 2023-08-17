@@ -13,15 +13,17 @@ import com.brandonjja.taskRun.TaskRun;
 public class PlayerConnectionListener implements Listener {
 	
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		Player player = e.getPlayer();
+	public void onJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
 		TaskRun.addPlayer(player);
-		player.awardAchievement(Achievement.OPEN_INVENTORY);
-		NMSUtils.sendTitleMessage(player, "", "");
+		if (!NMSUtils.isAtLeastOneTwelve()) {
+			player.awardAchievement(Achievement.OPEN_INVENTORY);
+			NMSUtils.sendTitleMessage(player, "", "");
+		}
 	}
 	
 	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		TaskRun.removePlayer(e.getPlayer());
+	public void onLeave(PlayerQuitEvent event) {
+		TaskRun.removePlayer(event.getPlayer());
 	}
 }

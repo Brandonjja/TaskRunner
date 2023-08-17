@@ -3,6 +3,7 @@ package com.brandonjja.taskRun.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -232,7 +233,13 @@ public class TR_Task {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			pl.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.GREEN +  " has completed \"" + descriptions.get(id) + "\"");
 			pl.sendMessage(ChatColor.GOLD + "Tasks completed: " + trPlayer.getFinishedTasks() + "/" + TaskRun.currentGame.getTotalTasksToFinish());
-			pl.playSound(pl.getLocation(), Sound.FIREWORK_LARGE_BLAST, 1, 1);
+			if (NMSUtils.isAtLeastOneThirteen()) {
+				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_FIREWORK_ROCKET_LARGE_BLAST"), 1, 1);
+			} else if (NMSUtils.isAtLeastOneNine()) {
+				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_FIREWORK_LARGE_BLAST"), 1, 1);
+			} else {
+				pl.playSound(pl.getLocation(), Sound.FIREWORK_LARGE_BLAST, 1, 1);
+			}
 		}
 		trPlayer.checkEndGame();
 	}

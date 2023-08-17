@@ -3,6 +3,7 @@ package com.brandonjja.taskRun.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -249,7 +250,12 @@ public class PlayerTR {
 			String msg = ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has collected 3 emeralds and was rewarded a diamond!";
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				pl.sendMessage(msg);
-				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
+
+				if (NMSUtils.isAtLeastOneNine()) {
+					pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_PLAYER_LEVELUP"), 1, 1);
+				} else {
+					pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
+				}
 			}
 			if (player.getInventory().firstEmpty() == -1 && !player.getInventory().contains(Material.DIAMOND)) {
 				player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.DIAMOND));

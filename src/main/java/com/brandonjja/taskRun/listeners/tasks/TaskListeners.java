@@ -2,18 +2,11 @@ package com.brandonjja.taskRun.listeners.tasks;
 
 import java.util.List;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,9 +32,9 @@ import com.brandonjja.taskRun.game.PlayerTR;
 import com.brandonjja.taskRun.game.TR_Task;
 
 public class TaskListeners implements Listener {
-	
+
 	// This class includes the Listeners (triggers) for all TaskRunner Tasks
-	
+
 	// Travel to the Nether
 	@EventHandler
 	public void onTravelToNether(PlayerPortalEvent e) {
@@ -50,7 +43,7 @@ public class TaskListeners implements Listener {
 			trPlayer.completeTask(1);
 		}
 	}
-	
+
 	// Grow a Tree with Bonemeal
 	@EventHandler
 	public void onTreeGrow(StructureGrowEvent e) {
@@ -61,33 +54,32 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	// Kill 5 Pigmen
 	// Kill 15 Creepers
 	// Kill a Ghast
 	@EventHandler
 	public void onEntityKill(EntityDeathEvent e) {
-		
+
 		if (!(e.getEntity().getKiller() instanceof Player)) {
 			return;
 		}
-		
+
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getEntity().getKiller());
 		LivingEntity entityKilled = e.getEntity();
-		
+
 		if (entityKilled instanceof PigZombie) {
 			trPlayer.completeTask(4);
 		} else if (entityKilled instanceof Creeper) {
 			trPlayer.completeTask(10);
 		} else if (entityKilled instanceof Ghast) {
 			trPlayer.completeTask(14);
-		} else if (entityKilled instanceof Skeleton) {
-			if (((Skeleton) entityKilled).getSkeletonType() == SkeletonType.WITHER) {
-				trPlayer.completeTask(29);
-			}
+		} else if ((entityKilled instanceof Skeleton && ((Skeleton) entityKilled).getSkeletonType() == SkeletonType.WITHER)
+				|| (NMSUtils.isAtLeastOneTwelve() && entityKilled.getType() == EntityType.valueOf("WITHER_SKELETON"))) {
+			trPlayer.completeTask(29);
 		}
 	}
-	
+
 	// Catch 2 Fish
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -100,7 +92,7 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onMilkCow(PlayerInteractAtEntityEvent e) {
 		Player player = e.getPlayer();
@@ -111,7 +103,7 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onThrowSnowball(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
@@ -122,7 +114,7 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onTNTLight(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
@@ -133,14 +125,14 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onXP(PlayerLevelChangeEvent e) {
 		if (e.getNewLevel() >= 15) {
 			TaskRun.getPlayer(e.getPlayer()).completeTask(26);
 		}
 	}
-	
+
 	@EventHandler
 	public void onStandOnBlock(PlayerMoveEvent e) {
 		Player player = e.getPlayer();
@@ -165,7 +157,7 @@ public class TaskListeners implements Listener {
 			trPlayer.completeTask(9);
 		}
 	}
-	
+
 	@EventHandler
 	public void onRunXBlocks(PlayerMoveEvent e) {
 		Player player = e.getPlayer();
@@ -174,7 +166,7 @@ public class TaskListeners implements Listener {
 			trPlayer.completeTask(20);
 		}
 	}
-	
+
 	@EventHandler
 	public void onShearSheep(PlayerInteractAtEntityEvent e) {
 		Player player = e.getPlayer();
@@ -188,7 +180,7 @@ public class TaskListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getEntity());
@@ -201,12 +193,12 @@ public class TaskListeners implements Listener {
 				task.removeTaskProgress(trPlayer, task.getTaskID(), Integer.MAX_VALUE);
 			}
 		}
-		
+
 		if (e.getDeathMessage().contains("lava")) {
 			trPlayer.completeTask(17);
 		}
 	}
-	
+
 	@EventHandler
 	public void onEnchantItem(EnchantItemEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer(e.getEnchanter());
@@ -214,23 +206,24 @@ public class TaskListeners implements Listener {
 			trPlayer.completeTask(19);
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onCraft(CraftItemEvent e) {
 		PlayerTR trPlayer = TaskRun.getPlayer((Player) e.getWhoClicked());
 		ItemStack item = e.getCurrentItem();
-		if (item.getType().getId() == 355) {
-			
+
+		if (item.getType().getId() == 355 || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("_BED")) {
+
 			trPlayer.completeTask(0); // id 0 = Craft a bed
-			
-		} else if (item.getType() == Material.CAKE) {
+
+		} else if (item.getType() == Material.CAKE || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("CAKE")) {
 			trPlayer.completeTask(21);
 		} else if (item.getType() == Material.GOLDEN_APPLE) {
 			trPlayer.completeTask(23);
 		}
 	}
-	
+
 	@EventHandler(priority=EventPriority.HIGH)
 	public void onEatChicken(PlayerItemConsumeEvent e) {
 		if (e.getItem().getType() == Material.RAW_CHICKEN) {
@@ -240,7 +233,7 @@ public class TaskListeners implements Listener {
 			TaskRun.getPlayer(e.getPlayer()).completeTask(22);
 		}
 	}
-	
+
 	@EventHandler
 	public void onEatStew(PlayerItemConsumeEvent e) {
 		if (e.getItem().getType() == Material.MUSHROOM_SOUP) {

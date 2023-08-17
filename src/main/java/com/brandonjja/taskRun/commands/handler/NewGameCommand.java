@@ -1,5 +1,6 @@
 package com.brandonjja.taskRun.commands.handler;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,7 +18,11 @@ public class NewGameCommand extends TaskRunCommand {
 		
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			TaskRun.getPlayer(pl).setNewScoreboard(true, false);
-			pl.playSound(pl.getLocation(), Sound.WITHER_SPAWN, 1, 1);
+			if (NMSUtils.isAtLeastOneNine()) {
+				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_WITHER_SPAWN"), 1, 1);
+			} else {
+				pl.playSound(pl.getLocation(), Sound.WITHER_SPAWN, 1, 1);
+			}
 		}
 		
 		return true;

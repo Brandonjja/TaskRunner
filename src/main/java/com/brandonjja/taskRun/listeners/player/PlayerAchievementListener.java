@@ -1,5 +1,6 @@
 package com.brandonjja.taskRun.listeners.player;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Achievement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,9 @@ public class PlayerAchievementListener implements Listener {
 	public void onAchievement(PlayerAchievementAwardedEvent e) {
 		Player player = e.getPlayer();
 		PlayerTR trPlayer = TaskRun.getPlayer(player);
+		if (NMSUtils.isAtLeastOneTwelve()) {
+			return;
+		}
 		Achievement achievement = e.getAchievement();
 		
 		if (achievement == Achievement.NETHER_PORTAL) {

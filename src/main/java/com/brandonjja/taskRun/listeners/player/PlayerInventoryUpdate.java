@@ -1,5 +1,6 @@
 package com.brandonjja.taskRun.listeners.player;
 
+import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +54,9 @@ public class PlayerInventoryUpdate implements Listener {
 	
 	/** Used to fix bug where achievements don't always show up, in 1.8.x */
 	private void handleBlazeRodAchievement(PlayerTR trPlayer) {
+		if (NMSUtils.isAtLeastOneTwelve()) {
+			return;
+		}
 		if (!trPlayer.hasGottenBlazeRod() && !trPlayer.getPlayer().hasAchievement(Achievement.GET_BLAZE_ROD)) {
 			trPlayer.pickupBlazeRod();
 			StringBuilder sb = new StringBuilder(trPlayer.getPlayer().getName())
@@ -72,6 +76,9 @@ public class PlayerInventoryUpdate implements Listener {
 	
 	/** Used to fix bug where achievements don't always show up, in 1.8.x */
 	private void handleDiamondsAchievement(PlayerTR trPlayer) {
+		if (NMSUtils.isAtLeastOneTwelve()) {
+			return;
+		}
 		if (!trPlayer.hasDiamonds() && !trPlayer.getPlayer().hasAchievement(Achievement.GET_DIAMONDS)) {
 			trPlayer.pickupDiamonds();
 			StringBuilder sb = new StringBuilder(trPlayer.getPlayer().getName())
