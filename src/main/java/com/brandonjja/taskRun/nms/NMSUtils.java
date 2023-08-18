@@ -10,114 +10,118 @@ import org.bukkit.entity.Player;
 
 public class NMSUtils {
 
-	private final static int fadeIn = 20;
-	private final static int duration = 100;
-	private final static int fadeOut = 20;
+    private final static int FADE_IN = 20;
+    private final static int DURATION = 100;
+    private final static int FADE_OUT = 20;
 
-	private static String version = null;
-	
-	/**
-	 * Sends a title message to the player
-	 * 
-	 * @param player the player to send the title to
-	 * @param message the message for the title
-	 * @param subMessage the sub message of the title (empty String for no sub message)
-	 */
-	public static void sendTitleMessage(Player player, String message, String subMessage) {
-		String titleMessage = "{\"text\":\"" + ChatColor.GREEN + message + "\"}";
-		String titleSubMessage = "{\"text\":\"" + subMessage + "\"}";
+    private static String version = null;
 
-		if (isAtLeastOneTwelve()) {
-			player.sendTitle(ChatColor.GREEN + message, subMessage);
-			return;
-		}
-		
-		Class<?> enumTitleActionClass = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
-		Class<?> iChatBaseCompClass = getNMSClass("IChatBaseComponent");
-		
-		Object chatSerializer;
-		Object chatSerializerSub;
+    /**
+     * Sends a title message to the player
+     *
+     * @param player     the player to send the title to
+     * @param message    the message for the title
+     * @param subMessage the sub message of the title (empty String for no sub message)
+     */
+    public static void sendTitleMessage(Player player, String message, String subMessage) {
+        String titleMessage = "{\"text\":\"" + ChatColor.GREEN + message + "\"}";
+        String titleSubMessage = "{\"text\":\"" + subMessage + "\"}";
 
-		Object enumTimes;
-		Object enumTitle;
-		Object enumSubTitle;
+        if (isAtLeastOneTwelve()) {
+            player.sendTitle(ChatColor.GREEN + message, subMessage);
+            return;
+        }
 
-		Object packetTimes;
-		Object packetTitleMessage;
-		Object packetSubTitleMessage;
-		
-		try {
-			Method a = getNMSClass("IChatBaseComponent$ChatSerializer").getMethod("a", String.class);
-			
-			chatSerializer = a.invoke(iChatBaseCompClass, titleMessage);
-			chatSerializerSub = a.invoke(iChatBaseCompClass, titleSubMessage);
+        Class<?> enumTitleActionClass = getNMSClass("PacketPlayOutTitle$EnumTitleAction");
+        Class<?> iChatBaseCompClass = getNMSClass("IChatBaseComponent");
 
-			enumTimes = enumTitleActionClass.getField("TIMES").get(null);
-			enumTitle = enumTitleActionClass.getField("TITLE").get(null);
-			enumSubTitle = enumTitleActionClass.getField("SUBTITLE").get(null);
-			
-			Constructor<?> packetPlayOutTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(enumTitleActionClass, iChatBaseCompClass, int.class, int.class, int.class);
+        Object chatSerializer;
+        Object chatSerializerSub;
 
-			packetTimes = packetPlayOutTitleConstructor.newInstance(enumTimes, chatSerializer, fadeIn, duration, fadeOut);
-			packetTitleMessage = packetPlayOutTitleConstructor.newInstance(enumTitle, chatSerializer, fadeIn, duration, fadeOut);
-			packetSubTitleMessage = packetPlayOutTitleConstructor.newInstance(enumSubTitle, chatSerializerSub, fadeIn, duration, fadeOut);
+        Object enumTimes;
+        Object enumTitle;
+        Object enumSubTitle;
 
-			sendPacket(player, packetTimes);
-			sendPacket(player, packetTitleMessage);
-			sendPacket(player, packetSubTitleMessage);
-			
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/** Sends a packet to the player */
-	private static void sendPacket(Player player, Object packet) {
-		try {
-			Object playerHandle = player.getClass().getMethod("getHandle").invoke(player);
-			Object playerConnection = playerHandle.getClass().getDeclaredField("playerConnection").get(playerHandle);
-			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/** Returns the NMS Class with the specified name, if it exists */
-	private static Class<?> getNMSClass(String name) {
-		try {
-			String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-			return Class.forName("net.minecraft.server." + version + "." + name);
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
-			return null;
-		}
-	}
+        Object packetTimes;
+        Object packetTitleMessage;
+        Object packetSubTitleMessage;
 
-	public static String getVersion() {
-		if (version == null) {
-			version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-		}
-		
-		return version;
-	}
+        try {
+            Method a = getNMSClass("IChatBaseComponent$ChatSerializer").getMethod("a", String.class);
 
-	public static boolean isAtLeastOneNine() {
-		String version = getVersion();
-		int ver = Integer.parseInt(version.split("_")[1]);
-		return ver >= 9;
-	}
+            chatSerializer = a.invoke(iChatBaseCompClass, titleMessage);
+            chatSerializerSub = a.invoke(iChatBaseCompClass, titleSubMessage);
 
-	public static boolean isAtLeastOneTwelve() {
-		String version = getVersion();
-		int ver = Integer.parseInt(version.split("_")[1]);
-		return ver >= 12;
-	}
+            enumTimes = enumTitleActionClass.getField("TIMES").get(null);
+            enumTitle = enumTitleActionClass.getField("TITLE").get(null);
+            enumSubTitle = enumTitleActionClass.getField("SUBTITLE").get(null);
 
-	public static boolean isAtLeastOneThirteen() {
-		String version = getVersion();
-		int ver = Integer.parseInt(version.split("_")[1]);
-		return ver >= 13;
-	}
+            Constructor<?> packetPlayOutTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(enumTitleActionClass, iChatBaseCompClass, int.class, int.class, int.class);
+
+            packetTimes = packetPlayOutTitleConstructor.newInstance(enumTimes, chatSerializer, FADE_IN, DURATION, FADE_OUT);
+            packetTitleMessage = packetPlayOutTitleConstructor.newInstance(enumTitle, chatSerializer, FADE_IN, DURATION, FADE_OUT);
+            packetSubTitleMessage = packetPlayOutTitleConstructor.newInstance(enumSubTitle, chatSerializerSub, FADE_IN, DURATION, FADE_OUT);
+
+            sendPacket(player, packetTimes);
+            sendPacket(player, packetTitleMessage);
+            sendPacket(player, packetSubTitleMessage);
+
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                 | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sends a packet to the player
+     */
+    private static void sendPacket(Player player, Object packet) {
+        try {
+            Object playerHandle = player.getClass().getMethod("getHandle").invoke(player);
+            Object playerConnection = playerHandle.getClass().getDeclaredField("playerConnection").get(playerHandle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                 | SecurityException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns the NMS Class with the specified name, if it exists
+     */
+    private static Class<?> getNMSClass(String name) {
+        try {
+            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            return Class.forName("net.minecraft.server." + version + "." + name);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getVersion() {
+        if (version == null) {
+            version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        }
+
+        return version;
+    }
+
+    public static boolean isAtLeastOneNine() {
+        String version = getVersion();
+        int ver = Integer.parseInt(version.split("_")[1]);
+        return ver >= 9;
+    }
+
+    public static boolean isAtLeastOneTwelve() {
+        String version = getVersion();
+        int ver = Integer.parseInt(version.split("_")[1]);
+        return ver >= 12;
+    }
+
+    public static boolean isAtLeastOneThirteen() {
+        String version = getVersion();
+        int ver = Integer.parseInt(version.split("_")[1]);
+        return ver >= 13;
+    }
 }

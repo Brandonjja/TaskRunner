@@ -16,25 +16,26 @@ import com.brandonjja.taskRun.commands.handler.TasksCommand;
 import com.brandonjja.taskRun.commands.handler.ToggleTasks;
 
 public class CommandManager implements CommandExecutor {
-	private static Map<String, TaskRunCommand> commandList = new HashMap<>();
+
+	private static final Map<String, TaskRunCommand> COMMANDS = new HashMap<>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if (!(sender instanceof Player)) {
 			return false;
 		}
-		return commandList.get(commandLabel).execute((Player) sender, args);
+		return COMMANDS.get(commandLabel).execute((Player) sender, args);
 	}
 	
 	public static void registerCommands() {
-		commandList.put("newgame", new NewGameCommand());
-		commandList.put("tasks", new TasksCommand());
-		commandList.put("toggletasks", new ToggleTasks());
-		commandList.put("tt", new ToggleTasks());
-		commandList.put("back", new BackCommand());
-		commandList.put("pause", new PauseCommand());
+		COMMANDS.put("newgame", new NewGameCommand());
+		COMMANDS.put("tasks", new TasksCommand());
+		COMMANDS.put("toggletasks", new ToggleTasks());
+		COMMANDS.put("tt", new ToggleTasks());
+		COMMANDS.put("back", new BackCommand());
+		COMMANDS.put("pause", new PauseCommand());
 		
-		for (String cmdLabel : commandList.keySet()) {
+		for (String cmdLabel : COMMANDS.keySet()) {
 			register(cmdLabel, new CommandManager());
 		}
 	}

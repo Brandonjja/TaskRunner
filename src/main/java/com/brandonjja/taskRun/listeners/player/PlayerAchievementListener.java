@@ -11,28 +11,29 @@ import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.game.PlayerTR;
 
 public class PlayerAchievementListener implements Listener {
-	
-	@EventHandler
-	public void onAchievement(PlayerAchievementAwardedEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (NMSUtils.isAtLeastOneTwelve()) {
-			return;
-		}
-		Achievement achievement = e.getAchievement();
-		
-		if (achievement == Achievement.NETHER_PORTAL) {
-			if (trPlayer.hasEnteredNether()) {
-				e.setCancelled(true);
-			}
-		} else if (achievement == Achievement.GET_BLAZE_ROD) {
-			if (trPlayer.hasGottenBlazeRod()) {
-				e.setCancelled(true);
-			}
-		} else if (achievement == Achievement.GET_DIAMONDS) {
-			if (trPlayer.hasDiamonds()) {
-				e.setCancelled(true);
-			}
-		}
-	}
+
+    @EventHandler
+    public void onAchievement(PlayerAchievementAwardedEvent event) {
+        if (NMSUtils.isAtLeastOneTwelve()) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        PlayerTR trPlayer = TaskRun.getPlayer(player);
+        Achievement achievement = event.getAchievement();
+
+        if (achievement == Achievement.NETHER_PORTAL) {
+            if (trPlayer.hasEnteredNether()) {
+                event.setCancelled(true);
+            }
+        } else if (achievement == Achievement.GET_BLAZE_ROD) {
+            if (trPlayer.hasGottenBlazeRod()) {
+                event.setCancelled(true);
+            }
+        } else if (achievement == Achievement.GET_DIAMONDS) {
+            if (trPlayer.hasDiamonds()) {
+                event.setCancelled(true);
+            }
+        }
+    }
 }
