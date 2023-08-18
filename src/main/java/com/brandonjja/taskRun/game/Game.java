@@ -138,6 +138,8 @@ public class Game {
 
             sendGameOverTitle(pl, winner);
         }
+
+        AutoShutdown.shutdown();
     }
 
     private void sendGameOverTitle(Player player, Player winner) {

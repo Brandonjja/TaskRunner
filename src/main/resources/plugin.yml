@@ -22,6 +22,9 @@ commands:
     pause:
         usage: /pause
         description: Pause or unpauses the game
+    nostop:
+        usage: /nostop
+        description: Stops the auto reboot
 permissions:
     taskrunner.*:
         children:

@@ -3,6 +3,7 @@ package com.brandonjja.taskRun.commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.brandonjja.taskRun.game.AutoShutdown;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,6 +35,7 @@ public class CommandManager implements CommandExecutor {
 		COMMANDS.put("tt", new ToggleTasks());
 		COMMANDS.put("back", new BackCommand());
 		COMMANDS.put("pause", new PauseCommand());
+		COMMANDS.put("nostop", new AutoShutdown());
 		
 		for (String cmdLabel : COMMANDS.keySet()) {
 			register(cmdLabel, new CommandManager());
