@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -61,24 +62,28 @@ public class PauseCommand extends TaskRunCommand implements Listener {
         player.getWorld().setGameRuleValue("doDaylightCycle", String.valueOf(frozen));
     }
 
+    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (frozen) {
             event.setCancelled(true);
         }
     }
 
+    @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (frozen && event.getEntity() instanceof Player) {
             event.setCancelled(true);
         }
     }
 
+    @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
         if (frozen) {
             event.setCancelled(true);
         }
     }
 
+    @EventHandler
     public void onPlayerConsume(PlayerItemConsumeEvent event) {
         if (frozen) {
             event.setCancelled(true);
