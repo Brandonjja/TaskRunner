@@ -121,6 +121,10 @@ public class PlayerTR {
 	public List<TR_Task> getTaskList() {
 		return taskList;
 	}
+
+	public void completeTask(Task task) {
+		completeTask(task.ordinal());
+	}
 	
 	/** Increases the completion of a task by 1 */
 	public void completeTask(int id) {
