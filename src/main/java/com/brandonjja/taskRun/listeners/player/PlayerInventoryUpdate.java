@@ -2,6 +2,7 @@ package com.brandonjja.taskRun.listeners.player;
 
 import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.game.PlayerTR;
+import com.brandonjja.taskRun.game.Task;
 import com.brandonjja.taskRun.nms.NMSUtils;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -30,13 +31,13 @@ public class PlayerInventoryUpdate implements Listener {
         if (itemType == Material.OBSIDIAN) {
             int ctr = item.getAmount();
             do {
-                trPlayer.completeTask(3);
+                trPlayer.completeTask(Task.GATHER_OBSIDIAN);
             } while (--ctr > 0);
         } else if (itemType == Material.BLAZE_ROD) {
             handleBlazeRodAchievement(trPlayer);
             int ctr = item.getAmount();
             do {
-                trPlayer.completeTask(12);
+                trPlayer.completeTask(Task.COLLECT_BLAZE_RODS);
             } while (--ctr > 0);
         } else if (itemType == Material.EMERALD) {
             for (int i = 0; i < item.getAmount(); i++) {
@@ -106,9 +107,9 @@ public class PlayerInventoryUpdate implements Listener {
         Material itemType = item.getType();
 
         if (itemType == Material.OBSIDIAN) {
-            trPlayer.removeTaskProgress(3, item.getAmount());
+            trPlayer.removeTaskProgress(Task.GATHER_OBSIDIAN, item.getAmount());
         } else if (itemType == Material.BLAZE_ROD) {
-            trPlayer.removeTaskProgress(12, item.getAmount());
+            trPlayer.removeTaskProgress(Task.COLLECT_BLAZE_RODS, item.getAmount());
         }
     }
 
