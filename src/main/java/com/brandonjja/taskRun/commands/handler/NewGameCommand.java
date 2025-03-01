@@ -11,20 +11,23 @@ import com.brandonjja.taskRun.game.Game;
 
 public class NewGameCommand extends TaskRunCommand {
 
-	@Override
-	public boolean execute(Player player, String[] args) {
-		if (!player.hasPermission("taskrunner.newgame")) return true;
-		TaskRun.currentGame = new Game();
-		
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			TaskRun.getPlayer(pl).setNewScoreboard(true, false);
-			if (NMSUtils.isAtLeastOneNine()) {
-				pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_WITHER_SPAWN"), 1, 1);
-			} else {
-				pl.playSound(pl.getLocation(), Sound.WITHER_SPAWN, 1, 1);
-			}
-		}
-		
-		return true;
-	}
+    @Override
+    public boolean execute(Player player, String[] args) {
+        if (!player.hasPermission("taskrunner.newgame")) {
+            return true;
+        }
+
+        TaskRun.currentGame = new Game();
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            TaskRun.getPlayer(onlinePlayer).setNewScoreboard(true, false);
+            if (NMSUtils.isAtLeastOneNine()) {
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_WITHER_SPAWN"), 1F, 1F);
+            } else {
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.WITHER_SPAWN, 1F, 1F);
+            }
+        }
+
+        return true;
+    }
 }

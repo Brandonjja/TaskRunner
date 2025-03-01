@@ -1,12 +1,24 @@
 package com.brandonjja.taskRun.listeners.tasks;
 
-import java.util.List;
-
+import com.brandonjja.taskRun.TaskRun;
+import com.brandonjja.taskRun.game.PlayerTR;
+import com.brandonjja.taskRun.game.Task;
 import com.brandonjja.taskRun.nms.NMSUtils;
+import gnu.trove.map.TObjectIntMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,220 +39,245 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.game.PlayerTR;
-import com.brandonjja.taskRun.game.TR_Task;
-
 public class TaskListeners implements Listener {
 
-	// This class includes the Listeners (triggers) for all TaskRunner Tasks
+    // This class includes the Listeners (triggers) for all TaskRunner Tasks
 
-	// Travel to the Nether
-	@EventHandler
-	public void onTravelToNether(PlayerPortalEvent e) {
-		PlayerTR trPlayer = TaskRun.getPlayer(e.getPlayer());
-		if (e.getTo().getWorld().getEnvironment() == Environment.NETHER) {
-			trPlayer.completeTask(1);
-		}
-	}
+    // Travel to the Nether
+    @EventHandler
+    public void onTravelToNether(PlayerPortalEvent event) {
+        if (event.getTo().getWorld().getEnvironment() == Environment.NETHER) {
+            PlayerTR trPlayer = TaskRun.getPlayer(event.getPlayer());
+            trPlayer.completeTask(Task.TRAVEL_TO_NETHER);
+        }
+    }
 
-	// Grow a Tree with Bonemeal
-	@EventHandler
-	public void onTreeGrow(StructureGrowEvent e) {
-		if (e.getPlayer() != null) {
-			PlayerTR trPlayer = TaskRun.getPlayer(e.getPlayer());
-			if (e.getBlocks().size() > 1) {
-				trPlayer.completeTask(2);
-			}
-		}
-	}
+    // Grow a Tree with Bonemeal
+    @EventHandler
+    public void onTreeGrow(StructureGrowEvent event) {
+        Player player = event.getPlayer();
+        if (player == null) {
+            return;
+        }
 
-	// Kill 5 Pigmen
-	// Kill 15 Creepers
-	// Kill a Ghast
-	@EventHandler
-	public void onEntityKill(EntityDeathEvent e) {
+        if (event.getBlocks().size() > 1) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.GROW_TREE_BONEMEAL);
+        }
+    }
 
-		if (!(e.getEntity().getKiller() instanceof Player)) {
-			return;
-		}
+    @EventHandler
+    public void onEntityKill(EntityDeathEvent event) {
+        LivingEntity entityKilled = event.getEntity();
+        Player killer = entityKilled.getKiller();
+        if (killer == null) {
+            return;
+        }
 
-		PlayerTR trPlayer = TaskRun.getPlayer(e.getEntity().getKiller());
-		LivingEntity entityKilled = e.getEntity();
+        PlayerTR trPlayer = TaskRun.getPlayer(killer);
 
-		if (entityKilled instanceof PigZombie) {
-			trPlayer.completeTask(4);
-		} else if (entityKilled instanceof Creeper) {
-			trPlayer.completeTask(10);
-		} else if (entityKilled instanceof Ghast) {
-			trPlayer.completeTask(14);
-		} else if ((entityKilled instanceof Skeleton && ((Skeleton) entityKilled).getSkeletonType() == SkeletonType.WITHER)
-				|| (NMSUtils.isAtLeastOneTwelve() && entityKilled.getType() == EntityType.valueOf("WITHER_SKELETON"))) {
-			trPlayer.completeTask(29);
-		}
-	}
+        if (entityKilled instanceof PigZombie) {
+            trPlayer.completeTask(Task.KILL_PIGMEN);
+        } else if (entityKilled instanceof Creeper) {
+            trPlayer.completeTask(Task.KILL_CREEPERS);
+        } else if (entityKilled instanceof Ghast) {
+            trPlayer.completeTask(Task.KILL_GHAST);
+        } else if ((entityKilled instanceof Skeleton && ((Skeleton) entityKilled).getSkeletonType() == SkeletonType.WITHER)
+                || (NMSUtils.isAtLeastOneTwelve() && entityKilled.getType() == EntityType.valueOf("WITHER_SKELETON"))) {
+            trPlayer.completeTask(Task.KILL_WITHER_SKELETON);
+        }
+    }
 
-	// Catch 2 Fish
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onFishCatch(PlayerFishEvent e) {
-		PlayerTR trPlayer = TaskRun.getPlayer(e.getPlayer());
-		if (e.getState() == State.CAUGHT_FISH) {
-			Item item = (Item) e.getCaught();
-			if (item.getItemStack().getType().getId() == 349) {
-				trPlayer.completeTask(5);
-			}
-		}
-	}
+    // Catch 2 Fish
+    @EventHandler
+    public void onFishCatch(PlayerFishEvent event) {
+        if (event.getState() != State.CAUGHT_FISH) {
+            return;
+        }
 
-	@EventHandler
-	public void onMilkCow(PlayerInteractAtEntityEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getItemInHand().getType() == Material.BUCKET) {
-			if (e.getRightClicked() instanceof Cow) {
-				trPlayer.completeTask(6);
-			}
-		}
-	}
+        Entity caught = event.getCaught();
+        if (!(caught instanceof Item)) {
+            return;
+        }
 
-	@EventHandler
-	public void onThrowSnowball(PlayerInteractEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getItemInHand().getType() == Material.SNOW_BALL) {
-			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				trPlayer.completeTask(7);
-			}
-		}
-	}
+        Item itemCaught = (Item) caught;
+        if (itemCaught.getItemStack().getType() != Material.RAW_FISH) {
+            return;
+        }
 
-	@EventHandler
-	public void onTNTLight(PlayerInteractEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getItemInHand() != null && player.getItemInHand().getType() == Material.FLINT_AND_STEEL && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (e.getClickedBlock().getType() == Material.TNT && !player.isSneaking()) {
-				trPlayer.completeTask(25);
-			}
-		}
-	}
+        PlayerTR trPlayer = TaskRun.getPlayer(event.getPlayer());
+        trPlayer.completeTask(Task.CATCH_FISH);
+    }
 
-	@EventHandler
-	public void onXP(PlayerLevelChangeEvent e) {
-		if (e.getNewLevel() >= 15) {
-			TaskRun.getPlayer(e.getPlayer()).completeTask(26);
-		}
-	}
+    @EventHandler
+    public void onMilkCow(PlayerInteractAtEntityEvent event) {
+        Player player = event.getPlayer();
+        ItemStack itemInHand = player.getItemInHand();
+        if (itemInHand == null || itemInHand.getType() != Material.BUCKET) {
+            return;
+        }
 
-	@EventHandler
-	public void onStandOnBlock(PlayerMoveEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		Location playerLocation = player.getLocation();
-		Location locationSub1 = new Location(playerLocation.getWorld(), playerLocation.getX(), playerLocation.getY() - 1, playerLocation.getZ());
-		if (locationSub1.getBlock().getType() == Material.BEDROCK) {
-			trPlayer.completeTask(8);
-		} else if (locationSub1.getBlock().getType() == Material.DIAMOND_BLOCK) {
-			trPlayer.completeTask(13);
-		}
-		if (playerLocation.getWorld().getEnvironment() == Environment.NETHER && playerLocation.getBlockY() == 1) {
-			trPlayer.completeTask(28);
-		}
-	}
+        if (event.getRightClicked() instanceof Cow) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.MILK_A_COW);
+        }
+    }
 
-	@EventHandler
-	public void onBuildLimitReached(PlayerMoveEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getLocation().getY() > 256.5) {
-			trPlayer.completeTask(9);
-		}
-	}
+    @EventHandler
+    public void onThrowSnowball(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack itemInHand = player.getItemInHand();
+        if (itemInHand == null || itemInHand.getType() != Material.SNOW_BALL) {
+            return;
+        }
 
-	@EventHandler
-	public void onRunXBlocks(PlayerMoveEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getLocation().getX() > 512) {
-			trPlayer.completeTask(20);
-		}
-	}
+        Action action = event.getAction();
+        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.THROW_SNOWBALLS);
+        }
+    }
 
-	@EventHandler
-	public void onShearSheep(PlayerInteractAtEntityEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (player.getItemInHand().getType() == Material.SHEARS) {
-			if (e.getRightClicked() instanceof Sheep) {
-				Sheep sheep = (Sheep) e.getRightClicked();
-				if (sheep.isAdult() && !sheep.isSheared()) {
-					trPlayer.completeTask(15);
-				}
-			}
-		}
-	}
+    @EventHandler
+    public void onTNTLight(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            return;
+        }
 
-	@EventHandler
-	public void onDeath(PlayerDeathEvent e) {
-		PlayerTR trPlayer = TaskRun.getPlayer(e.getEntity());
-		List<TR_Task> taskList = trPlayer.getTaskList();
-		if (taskList == null) {
-			return;
-		}
-		for (TR_Task task : taskList) {
-			if (task.getTaskID() == 3 || task.getTaskID() == 12) {
-				task.removeTaskProgress(trPlayer, task.getTaskID(), Integer.MAX_VALUE);
-			}
-		}
+        ItemStack itemInHand = player.getItemInHand();
+        if (itemInHand == null) {
+            return;
+        }
 
-		if (e.getDeathMessage().contains("lava")) {
-			trPlayer.completeTask(17);
-		}
-	}
+        if (itemInHand.getType() != Material.FLINT_AND_STEEL) {
+            return;
+        }
 
-	@EventHandler
-	public void onEnchantItem(EnchantItemEvent e) {
-		PlayerTR trPlayer = TaskRun.getPlayer(e.getEnchanter());
-		if (e.getItem().getType() == Material.GOLD_SPADE) {
-			trPlayer.completeTask(19);
-		}
-	}
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !event.hasBlock()) {
+            return;
+        }
 
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onCraft(CraftItemEvent e) {
-		PlayerTR trPlayer = TaskRun.getPlayer((Player) e.getWhoClicked());
-		ItemStack item = e.getCurrentItem();
+        if (event.getClickedBlock().getType() == Material.TNT) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.LIGHT_TNT_WITH_FLINT);
+        }
+    }
 
-		if (item.getType().getId() == 355 || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("_BED")) {
+    @EventHandler
+    public void onLevelChange(PlayerLevelChangeEvent event) {
+        if (event.getNewLevel() >= 15) {
+            TaskRun.getPlayer(event.getPlayer()).completeTask(Task.XP_LEVELS);
+        }
+    }
 
-			trPlayer.completeTask(0); // id 0 = Craft a bed
+    @EventHandler
+    public void onStandOnBlock(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Location playerLocation = player.getLocation();
+        Location locationBelow = new Location(playerLocation.getWorld(), playerLocation.getX(), playerLocation.getY() - 1, playerLocation.getZ());
+        PlayerTR trPlayer = TaskRun.getPlayer(player);
+        if (locationBelow.getBlock().getType() == Material.BEDROCK) {
+            trPlayer.completeTask(Task.STAND_ON_BEDROCK);
+        } else if (locationBelow.getBlock().getType() == Material.DIAMOND_BLOCK) {
+            trPlayer.completeTask(Task.STAND_ON_DIAMOND_BLOCK);
+        }
 
-		} else if (item.getType() == Material.CAKE || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("CAKE")) {
-			trPlayer.completeTask(21);
-		} else if (item.getType() == Material.GOLDEN_APPLE) {
-			trPlayer.completeTask(23);
-		}
-	}
+        if (playerLocation.getWorld().getEnvironment() == Environment.NETHER && playerLocation.getBlockY() == 1) {
+            trPlayer.completeTask(Task.NETHER_Y_1);
+        }
+    }
 
-	@EventHandler(priority=EventPriority.HIGH)
-	public void onEatChicken(PlayerItemConsumeEvent e) {
-		if (e.getItem().getType() == Material.RAW_CHICKEN) {
-			if (e.isCancelled()) {
-				return;
-			}
-			TaskRun.getPlayer(e.getPlayer()).completeTask(22);
-		}
-	}
+    @EventHandler
+    public void onBuildLimitReached(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (player.getLocation().getY() > 256.5) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.BUILD_TO_HEIGHT_LIMIT);
+        }
+    }
 
-	@EventHandler
-	public void onEatStew(PlayerItemConsumeEvent e) {
-		if (e.getItem().getType() == Material.MUSHROOM_SOUP) {
-			if (e.isCancelled()) {
-				return;
-			}
-			TaskRun.getPlayer(e.getPlayer()).completeTask(27);
-		}
-	}
+    @EventHandler
+    public void onRunXBlocks(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (player.getLocation().getX() > 512) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.RUN_X);
+        }
+    }
+
+    @EventHandler
+    public void onShearSheep(PlayerInteractAtEntityEvent event) {
+        Player player = event.getPlayer();
+        ItemStack itemInHand = player.getItemInHand();
+        if (itemInHand == null || itemInHand.getType() != Material.SHEARS) {
+            return;
+        }
+
+        Entity clickedEntity = event.getRightClicked();
+        if (!(clickedEntity instanceof Sheep)) {
+            return;
+        }
+
+        Sheep sheep = (Sheep) clickedEntity;
+        if (sheep.isAdult() && !sheep.isSheared()) {
+            PlayerTR trPlayer = TaskRun.getPlayer(player);
+            trPlayer.completeTask(Task.SHEAR_SHEEP);
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        PlayerTR trPlayer = TaskRun.getPlayer(event.getEntity());
+        TObjectIntMap<Task> taskList = trPlayer.getTaskList();
+        if (taskList == null) {
+            return;
+        }
+
+        for (Task task : taskList.keySet()) {
+            if (task == Task.GATHER_OBSIDIAN || task == Task.COLLECT_BLAZE_RODS) {
+                trPlayer.removeTaskProgress(task, Integer.MAX_VALUE);
+            }
+        }
+
+        if (event.getDeathMessage().contains("lava")) {
+            trPlayer.completeTask(Task.DIE_FROM_LAVA);
+        }
+    }
+
+    @EventHandler
+    public void onEnchantItem(EnchantItemEvent event) {
+        if (event.getItem().getType() == Material.GOLD_SPADE) {
+            PlayerTR trPlayer = TaskRun.getPlayer(event.getEnchanter());
+            trPlayer.completeTask(Task.ENCHANT_GOLDEN_SHOVEL);
+        }
+    }
+
+    @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        PlayerTR trPlayer = TaskRun.getPlayer((Player) event.getWhoClicked());
+        ItemStack item = event.getCurrentItem();
+        Material material = item.getType();
+        if (material == Material.BED || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("_BED")) {
+            trPlayer.completeTask(Task.MAKE_A_BED);
+        } else if (material == Material.CAKE || NMSUtils.isAtLeastOneTwelve() && item.toString().contains("CAKE")) {
+            trPlayer.completeTask(Task.BAKE_A_CAKE);
+        } else if (material == Material.GOLDEN_APPLE) {
+            trPlayer.completeTask(Task.MAKE_A_GAPPLE);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onEatChicken(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() == Material.RAW_CHICKEN) {
+            TaskRun.getPlayer(event.getPlayer()).completeTask(Task.EAT_RAW_CHICKEN);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEatStew(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() == Material.MUSHROOM_SOUP) {
+            TaskRun.getPlayer(event.getPlayer()).completeTask(Task.EAT_MUSHROOM_SOUP);
+        }
+    }
 }

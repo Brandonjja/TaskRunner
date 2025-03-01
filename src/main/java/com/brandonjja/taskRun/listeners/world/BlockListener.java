@@ -1,12 +1,12 @@
 package com.brandonjja.taskRun.listeners.world;
 
-import java.util.Random;
-
+import com.brandonjja.taskRun.TaskRun;
+import com.brandonjja.taskRun.game.PlayerTR;
+import com.brandonjja.taskRun.game.Task;
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -15,58 +15,54 @@ import org.bukkit.material.Leaves;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Tree;
 
-import com.brandonjja.taskRun.TaskRun;
-import com.brandonjja.taskRun.game.PlayerTR;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BlockListener implements Listener {
-	
-	private static Random random = new Random();
-	
-	@SuppressWarnings("deprecation") // Magic values
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		if (e.getBlock().getType() == Material.GLOWSTONE) {
-			trPlayer.completeTask(16);
-		} else if (e.getBlock().getType() == Material.QUARTZ_ORE) {
-			trPlayer.completeTask(18);
-		} else if (e.getBlock().getType() == Material.NETHERRACK) {
-			trPlayer.completeTask(24);
-		} else if (e.getBlock().getType() == Material.GLASS) {
-			trPlayer.completeTask(30);
-		} else if (e.getBlock().getType() == Material.LONG_GRASS || e.getBlock().getType() == Material.DOUBLE_PLANT) {
-			if (e.getBlock().getType() == Material.DOUBLE_PLANT) {
-				if (e.getBlock().getData() == (byte) 2) {
-					trPlayer.completeTask(31);
-				} else if (e.getBlock().getData() == (byte) 10) {
-					if (e.getBlock().getRelative(BlockFace.DOWN).getData() == (byte) 2) {
-						trPlayer.completeTask(31);
-					}
-				}
-			} else {
-				trPlayer.completeTask(31);
-			}
-		}
-	}
 
-	@EventHandler
-	public void onLeafBreak(BlockBreakEvent event) {
-		Block block = event.getBlock();
-		if (block.getType() != Material.LEAVES) {
-			return;
-		}
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Material blockType = event.getBlock().getType();
+        PlayerTR trPlayer = TaskRun.getPlayer(event.getPlayer());
+        if (blockType == Material.GLOWSTONE) {
+            trPlayer.completeTask(Task.BREAK_GLOWSTONE);
+        } else if (blockType == Material.QUARTZ_ORE) {
+            trPlayer.completeTask(Task.MINE_QUARTZ_ORE);
+        } else if (blockType == Material.NETHERRACK) {
+            trPlayer.completeTask(Task.BREAK_NETHERRACK);
+        } else if (blockType == Material.GLASS) {
+            trPlayer.completeTask(Task.BREAK_GLASS);
+        } else if (blockType == Material.LONG_GRASS || blockType == Material.DOUBLE_PLANT) {
+            if (blockType == Material.DOUBLE_PLANT) {
+                if (event.getBlock().getData() == (byte) 2) {
+                    trPlayer.completeTask(Task.TOUCH_GRASS);
+                } else if (event.getBlock().getData() == (byte) 10) {
+                    if (event.getBlock().getRelative(BlockFace.DOWN).getData() == (byte) 2) {
+                        trPlayer.completeTask(Task.TOUCH_GRASS);
+                    }
+                }
+            } else {
+                trPlayer.completeTask(Task.TOUCH_GRASS);
+            }
+        }
+    }
 
-		MaterialData leaf = block.getState().getData();
-		boolean shouldTryDrop = false;
-		if (leaf instanceof Leaves && ((Leaves) leaf).getSpecies() == TreeSpecies.GENERIC) {
-			shouldTryDrop = true;
-		} else if (leaf instanceof Tree && ((Tree) leaf).getSpecies() == TreeSpecies.GENERIC) {
-			shouldTryDrop = true;
-		}
+    @EventHandler
+    public void onLeafBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        if (block.getType() != Material.LEAVES) {
+            return;
+        }
 
-		if (shouldTryDrop && random.nextInt(100) < 5) {
-			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.APPLE));
-		}
-	}
+        MaterialData leaf = block.getState().getData();
+        boolean shouldTryDrop = false;
+        if (leaf instanceof Leaves && ((Leaves) leaf).getSpecies() == TreeSpecies.GENERIC) {
+            shouldTryDrop = true;
+        } else if (leaf instanceof Tree && ((Tree) leaf).getSpecies() == TreeSpecies.GENERIC) {
+            shouldTryDrop = true;
+        }
+
+        if (shouldTryDrop && ThreadLocalRandom.current().nextInt(100) < 5) {
+            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.APPLE));
+        }
+    }
 }

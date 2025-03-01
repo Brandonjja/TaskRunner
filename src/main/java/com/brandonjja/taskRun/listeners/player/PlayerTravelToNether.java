@@ -14,23 +14,24 @@ import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.game.PlayerTR;
 
 public class PlayerTravelToNether implements Listener {
-	
-	@EventHandler(priority=EventPriority.HIGHEST)
-	public void onTravelToNether(PlayerPortalEvent e) {
-		Player player = e.getPlayer();
-		PlayerTR trPlayer = TaskRun.getPlayer(player);
-		//e.getPlayer().awardAchievement(Achievement.NETHER_PORTAL);
 
-		if (NMSUtils.isAtLeastOneTwelve()) {
-			return;
-		}
-		
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			if (e.getTo().getWorld().getName().contains("nether") && !player.hasAchievement(Achievement.NETHER_PORTAL) && !trPlayer.hasEnteredNether()) {
-				pl.sendMessage(player.getName() + " has just earned the achievement " + ChatColor.GREEN + "[We Need to Go Deeper]");
-			}
-		}
-		
-		trPlayer.enterNether();
-	}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTravelToNether(PlayerPortalEvent event) {
+        if (NMSUtils.isAtLeastOneTwelve()) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        PlayerTR trPlayer = TaskRun.getPlayer(player);
+
+        // Fixes this achievement not always displaying in chat for players in versions below 1.12. It will not
+        // actually award the achievement, but at least players are notified
+        if (event.getTo().getWorld().getName().contains("nether") && !player.hasAchievement(Achievement.NETHER_PORTAL) && !trPlayer.hasEnteredNether()) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.sendMessage(player.getName() + " has just earned the achievement " + ChatColor.GREEN + "[We Need to Go Deeper]");
+            }
+        }
+
+        trPlayer.enterNether();
+    }
 }

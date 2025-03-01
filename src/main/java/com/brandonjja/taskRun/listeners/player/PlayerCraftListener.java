@@ -8,13 +8,13 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerCraftListener implements Listener {
-	
-	@EventHandler
-	public void onCraft(CraftItemEvent e) {
-		ItemStack item = e.getCurrentItem();
-		if (item.getType() == Material.GLOWSTONE) {
-			e.setCancelled(true);
-			e.getViewers().get(0).sendMessage(ChatColor.YELLOW + "You cannot craft Glowstone in TaskRunner!");
-		}
-	}
+
+    @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        ItemStack item = event.getCurrentItem();
+        if (item.getType() == Material.GLOWSTONE) {
+            event.setCancelled(true);
+            event.getViewers().get(0).sendMessage(ChatColor.YELLOW + "You cannot craft Glowstone in TaskRunner!");
+        }
+    }
 }

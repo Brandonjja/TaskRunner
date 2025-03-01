@@ -10,45 +10,56 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CompassClickListener implements Listener {
-	private Player track(Player p) {
-		double minDistanceFound = Double.POSITIVE_INFINITY;
-		Player target = null;
-		
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			if (pl.equals(p)) {
-				continue;
-			}
-			double distanceTo;
-			try {
-				distanceTo = p.getLocation().distance(pl.getLocation());
-			} catch (IllegalArgumentException ex) {
-				distanceTo = Double.POSITIVE_INFINITY;
-			}
-			if (distanceTo > minDistanceFound) {
-				continue;
-			}
-			minDistanceFound = distanceTo;
-			target = pl;
-		}
-		if (target == null || minDistanceFound == Double.POSITIVE_INFINITY) {
-			return null;
-		} else {
-			return target;
-		}
-	}
 
 	@EventHandler
-	public void onTrack(PlayerInteractEvent e) {
-		Player player = e.getPlayer();
-		if (player.getItemInHand().getType() == Material.COMPASS) {
-			Player target = track(player);
-			if (target != null) {
-				Location loc = target.getLocation();
-				player.setCompassTarget(loc);
-				player.sendMessage(ChatColor.GREEN + "Currently Tracking: " + ChatColor.AQUA + target.getName());
-			} else {
-				player.sendMessage(ChatColor.RED + "No players found!");
-			}
+	public void onTrackPlayer(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		if (player.getItemInHand().getType() != Material.COMPASS) {
+			return;
 		}
+
+		Player target = getClosestPlayer(player);
+		if (target != null) {
+			Location targetLocation = target.getLocation();
+			player.setCompassTarget(targetLocation);
+			player.sendMessage(ChatColor.GREEN + "Currently Tracking: " + ChatColor.AQUA + target.getName());
+			return;
+		}
+
+		player.sendMessage(ChatColor.RED + "No players found!");
+	}
+
+	/**
+	 * Searches for the nearest online player to the tracker.
+	 *
+	 * @param player the player doing the tracking
+	 * @return the nearest player if any exists, otherwise null
+	 */
+	private Player getClosestPlayer(Player player) {
+		double minDistanceFound = Double.POSITIVE_INFINITY;
+		Player target = null;
+
+		Location trackerLocation = player.getLocation();
+		for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+			if (otherPlayer.equals(player)) {
+				continue;
+			}
+
+			double distanceToTarget;
+			try {
+				distanceToTarget = trackerLocation.distanceSquared(otherPlayer.getLocation());
+			} catch (IllegalArgumentException ex) {
+				distanceToTarget = Double.POSITIVE_INFINITY;
+			}
+
+			if (distanceToTarget > minDistanceFound) {
+				continue;
+			}
+
+			minDistanceFound = distanceToTarget;
+			target = otherPlayer;
+		}
+
+		return (target == null || minDistanceFound == Double.POSITIVE_INFINITY) ? null : target;
 	}
 }
