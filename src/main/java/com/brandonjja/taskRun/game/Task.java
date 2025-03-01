@@ -76,11 +76,11 @@ public enum Task {
             onlinePlayer.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has completed \"" + getDescription() + "\"");
             onlinePlayer.sendMessage(ChatColor.GOLD + "Tasks completed: " + trPlayer.getFinishedTasks() + "/" + TaskRun.currentGame.getTotalTasksToFinish());
             if (NMSUtils.isAtLeastOneThirteen()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_FIREWORK_ROCKET_LARGE_BLAST"), 1, 1);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_FIREWORK_ROCKET_LARGE_BLAST"), 1F, 1F);
             } else if (NMSUtils.isAtLeastOneNine()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_FIREWORK_LARGE_BLAST"), 1, 1);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_FIREWORK_LARGE_BLAST"), 1F, 1F);
             } else {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.FIREWORK_LARGE_BLAST, 1, 1);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.FIREWORK_LARGE_BLAST, 1F, 1F);
             }
         }
         trPlayer.checkEndGame();

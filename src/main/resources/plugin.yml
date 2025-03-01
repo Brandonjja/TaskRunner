@@ -1,36 +1,36 @@
 name: TaskRunner
-version: 1.0
+version: 1.1
 main: com.brandonjja.taskRun.TaskRun
 author: Brandonjja
 description: TaskRunner
 commands:
-    newgame:
-        usage: /newgame
-        description: Starts a new game
-    tasks:
-        usage: /tasks
-        description: Displays a list of tasks to do
-    toggletasks:
-        usage: /toggletasks
-        description: Toggles the side task bar
-    tt:
-        usage: /tt
-        description: Toggles the side task bar (same as /toggletasks)
-    back:
-        usage: /back
-        description: Teleports you to your previous location after TPing
-    pause:
-        usage: /pause
-        description: Pause or unpauses the game
+  newgame:
+    usage: /newgame
+    description: Starts a new game
+  tasks:
+    usage: /tasks
+    description: Displays a list of tasks to do
+  toggletasks:
+    usage: /toggletasks
+    description: Toggles the side task bar
+  tt:
+    usage: /tt
+    description: Toggles the side task bar (same as /toggletasks)
+  back:
+    usage: /back
+    description: Teleports you to your previous location after TPing
+  pause:
+    usage: /pause
+    description: Pause or unpauses the game
 permissions:
-    taskrunner.*:
-        children:
-            taskrunner.newgame: true
-            taskrunner.back: true
-            taskrunner.pause: true
-    taskrunner.newgame:
-        default: op
-    taskrunner.back:
-        default: op
-    taskrunner.pause:
-        default: op
+  taskrunner.*:
+    children:
+      taskrunner.newgame: true
+      taskrunner.back: true
+      taskrunner.pause: true
+  taskrunner.newgame:
+    default: op
+  taskrunner.back:
+    default: op
+  taskrunner.pause:
+    default: op

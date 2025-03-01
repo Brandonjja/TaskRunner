@@ -4,18 +4,23 @@ import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.nms.NMSUtils;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.logging.Level;
 
 public class PlayerTR {
 
     private Player player;
     private TObjectIntMap<Task> taskList;
     private int totalTasksCompleted;
-    private ScoreboardTR board = null;
+    private ScoreboardTR board;
     private boolean hasScoreboard;
     private boolean enteredNether;
     private boolean gotBlazeRods;
@@ -47,7 +52,7 @@ public class PlayerTR {
     /**
      * Updates the player object, used when a player relogs
      *
-     * @param player
+     * @param player the new player object
      */
     public void updatePlayer(Player player) {
         this.player = player;
@@ -56,7 +61,7 @@ public class PlayerTR {
     /**
      * Creates a list of given tasks to complete for a game
      *
-     * @param taskList
+     * @param taskList the tasks to complete this game
      */
     public void setTaskList(List<Task> taskList) {
         this.taskList = new TObjectIntHashMap<>();
@@ -78,6 +83,7 @@ public class PlayerTR {
             player.sendMessage(ChatColor.RED + "Error");
             return "null";
         }
+
         StringBuilder message = new StringBuilder(ChatColor.GOLD + "---------- Tasks ----------\n");
         int ctr = 0;
         for (Task task : taskList.keySet()) {
@@ -92,6 +98,7 @@ public class PlayerTR {
                     .append(task.toString(taskList.get(task)))
                     .append("\n");
         }
+
         return message.toString();
     }
 
@@ -153,6 +160,12 @@ public class PlayerTR {
             return;
         }
 
+        // This player most likely joined the server after the game has started and is not part of this game
+        if (board == null) {
+            TaskRun.getPlugin().getLogger().log(Level.INFO, String.format("Not completing task for %s due to not having a scoreboard.", player.getName()));
+            return;
+        }
+
         int totalCompleted = taskList.adjustOrPutValue(task, 1, 1);
         board.updateTask(task, player, totalCompleted - 1, totalCompleted);
         if (totalCompleted >= task.getNeededCompletions()) {
@@ -180,9 +193,15 @@ public class PlayerTR {
             return;
         }
 
+        if (board == null) {
+            TaskRun.getPlugin().getLogger().log(Level.INFO, String.format("Not removing task for %s due to not having a scoreboard.", player.getName()));
+            return;
+        }
+
         int currentlyCompleted = taskList.get(task);
-        taskList.put(task, Math.max(currentlyCompleted - howMuch, 0));
-        board.updateTask(task, player, currentlyCompleted, taskList.get(task));
+        int newProgress = Math.max(currentlyCompleted - howMuch, 0);
+        taskList.put(task, newProgress);
+        board.updateTask(task, player, currentlyCompleted, newProgress);
     }
 
     /**
@@ -267,28 +286,28 @@ public class PlayerTR {
 
     public void addEmeraldCollected() {
         emeraldsCollected++;
-
-        if (emeraldsCollected == 3) {
-            String msg = ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has collected 3 emeralds and was rewarded a diamond!";
-            for (Player pl : Bukkit.getOnlinePlayers()) {
-                pl.sendMessage(msg);
-
-                if (NMSUtils.isAtLeastOneNine()) {
-                    pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_PLAYER_LEVELUP"), 1, 1);
-                } else {
-                    pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
-                }
-            }
-            if (player.getInventory().firstEmpty() == -1 && !player.getInventory().contains(Material.DIAMOND)) {
-                player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.DIAMOND));
-                player.sendMessage(ChatColor.RED + "Your inventory was full, so your diamond was dropped on the ground");
-            } else {
-                player.getInventory().addItem(new ItemStack(Material.DIAMOND));
-            }
-            emeraldsCollected = 0;
-        } else {
-            player.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "You have collected: " + emeraldsCollected + " emerald(s).. maybe you should find more!");
+        if (emeraldsCollected < 3) {
+            player.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "You have collected: " + emeraldsCollected + " emerald(s).. maybe you should find more!");
+            return;
         }
 
+        String broadcastMessage = ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has collected 3 emeralds and was rewarded a diamond!";
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(broadcastMessage);
+
+            if (NMSUtils.isAtLeastOneNine()) {
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_PLAYER_LEVELUP"), 1F, 1F);
+            } else {
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+            }
+        }
+
+        if (player.getInventory().firstEmpty() == -1 && !player.getInventory().contains(Material.DIAMOND)) {
+            player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.DIAMOND));
+            player.sendMessage(ChatColor.RED + "Your inventory was full, so your diamond was dropped on the ground");
+        } else {
+            player.getInventory().addItem(new ItemStack(Material.DIAMOND));
+        }
+        emeraldsCollected = 0;
     }
 }

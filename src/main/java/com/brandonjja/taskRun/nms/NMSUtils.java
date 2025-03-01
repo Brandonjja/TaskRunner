@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 
 public class NMSUtils {
 
-    private final static int FADE_IN = 20;
-    private final static int DURATION = 100;
-    private final static int FADE_OUT = 20;
+    private static final int FADE_IN = 20;
+    private static final int DURATION = 100;
+    private static final int FADE_OUT = 20;
 
     private static String version = null;
 
@@ -72,33 +72,6 @@ public class NMSUtils {
         }
     }
 
-    /**
-     * Sends a packet to the player
-     */
-    private static void sendPacket(Player player, Object packet) {
-        try {
-            Object playerHandle = player.getClass().getMethod("getHandle").invoke(player);
-            Object playerConnection = playerHandle.getClass().getDeclaredField("playerConnection").get(playerHandle);
-            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                 | SecurityException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Returns the NMS Class with the specified name, if it exists
-     */
-    private static Class<?> getNMSClass(String name) {
-        try {
-            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-            return Class.forName("net.minecraft.server." + version + "." + name);
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     public static String getVersion() {
         if (version == null) {
             version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -123,5 +96,36 @@ public class NMSUtils {
         String version = getVersion();
         int ver = Integer.parseInt(version.split("_")[1]);
         return ver >= 13;
+    }
+
+    /**
+     * Sends a packet to the provided player
+     *
+     * @param player the player to send a packet to
+     * @param packet the packet to send
+     */
+    private static void sendPacket(Player player, Object packet) {
+        try {
+            Object playerHandle = player.getClass().getMethod("getHandle").invoke(player);
+            Object playerConnection = playerHandle.getClass().getDeclaredField("playerConnection").get(playerHandle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                 | SecurityException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param name the name of an NMS class to search for
+     * @return the NMS Class with the specified name, if it exists
+     */
+    private static Class<?> getNMSClass(String name) {
+        try {
+            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            return Class.forName("net.minecraft.server." + version + "." + name);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

@@ -8,7 +8,17 @@ import gnu.trove.map.TObjectIntMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,8 +28,14 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -52,12 +68,13 @@ public class TaskListeners implements Listener {
 
     @EventHandler
     public void onEntityKill(EntityDeathEvent event) {
-        if (event.getEntity().getKiller() == null) {
+        LivingEntity entityKilled = event.getEntity();
+        Player killer = entityKilled.getKiller();
+        if (killer == null) {
             return;
         }
 
-        PlayerTR trPlayer = TaskRun.getPlayer(event.getEntity().getKiller());
-        LivingEntity entityKilled = event.getEntity();
+        PlayerTR trPlayer = TaskRun.getPlayer(killer);
 
         if (entityKilled instanceof PigZombie) {
             trPlayer.completeTask(Task.KILL_PIGMEN);

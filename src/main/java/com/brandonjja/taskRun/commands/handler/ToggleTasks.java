@@ -11,7 +11,6 @@ public class ToggleTasks extends TaskRunCommand {
 
     @Override
     public boolean execute(Player player, String[] args) {
-
         if (TaskRun.currentGame == null) {
             player.sendMessage(ChatColor.RED + "No current game");
             return true;

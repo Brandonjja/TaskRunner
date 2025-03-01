@@ -19,8 +19,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerInventoryUpdate implements Listener {
 
-    private final static String DIAMONDS_HOVER_MESSAGE = ChatColor.GREEN + "DIAMONDS!\n" + ChatColor.ITALIC + "Achievement\n" + ChatColor.WHITE + "Acquire diamonds with your iron tools";
-    private final static String BLAZE_ROD_HOVER_MESSAGE = ChatColor.GREEN + "Into Fire\n" + ChatColor.ITALIC + "Achievement\n" + ChatColor.WHITE + "Relieve a Blaze of its rod";
+    private static final String DIAMONDS_HOVER_MESSAGE = ChatColor.GREEN + "DIAMONDS!\n" + ChatColor.ITALIC + "Achievement\n" + ChatColor.WHITE + "Acquire diamonds with your iron tools";
+    private static final String BLAZE_ROD_HOVER_MESSAGE = ChatColor.GREEN + "Into Fire\n" + ChatColor.ITALIC + "Achievement\n" + ChatColor.WHITE + "Relieve a Blaze of its rod";
 
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent event) {

@@ -22,7 +22,7 @@ public class PauseCommand extends TaskRunCommand implements Listener {
     private static final Function<Player, String> UNFROZEN_MSG = player -> ChatColor.BLUE + "The game has been " + ChatColor.GREEN + ChatColor.BOLD + "unpaused" + ChatColor.BLUE + " by " + player.getName() + ", so you are now " + ChatColor.AQUA + ChatColor.BOLD + "unfrozen!";
     private static final Function<Player, String> FREEZE_MSG = player -> ChatColor.BLUE + "The game has been " + ChatColor.RED + ChatColor.BOLD + "paused" + ChatColor.BLUE + " by " + player.getName() + ", so you are now " + ChatColor.AQUA + ChatColor.BOLD + "frozen!";
 
-    private static boolean frozen = false;
+    private static boolean currentlyFrozen = false;
 
     @Override
     public boolean execute(Player player, String[] args) {
@@ -30,11 +30,11 @@ public class PauseCommand extends TaskRunCommand implements Listener {
             return true;
         }
 
-        String message = frozen ? UNFROZEN_MSG.apply(player) : FREEZE_MSG.apply(player);
-        for (Player pl : Bukkit.getOnlinePlayers()) {
-            pl.sendMessage(message);
+        String message = currentlyFrozen ? UNFROZEN_MSG.apply(player) : FREEZE_MSG.apply(player);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(message);
 
-            for (Entity entity : pl.getNearbyEntities(40, 40, 40)) {
+            for (Entity entity : onlinePlayer.getNearbyEntities(40, 40, 40)) {
                 if (entity instanceof Player) {
                     continue;
                 }
@@ -44,48 +44,48 @@ public class PauseCommand extends TaskRunCommand implements Listener {
                 }
 
                 LivingEntity livingEntity = (LivingEntity) entity;
-                if (frozen) {
+                if (currentlyFrozen) {
                     livingEntity.removePotionEffect(PotionEffectType.SLOW);
                 } else {
-                    livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10000, 20));
+                    livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10_000, 20));
                 }
             }
         }
 
         toggleGameRule(player);
 
-        frozen = !frozen;
+        currentlyFrozen = !currentlyFrozen;
         return true;
     }
 
     private void toggleGameRule(Player player) {
-        player.getWorld().setGameRuleValue("doDaylightCycle", String.valueOf(frozen));
+        player.getWorld().setGameRuleValue("doDaylightCycle", String.valueOf(currentlyFrozen));
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (frozen) {
+        if (currentlyFrozen) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (frozen && event.getEntity() instanceof Player) {
+        if (currentlyFrozen && event.getEntity() instanceof Player) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
-        if (frozen) {
+        if (currentlyFrozen) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlayerConsume(PlayerItemConsumeEvent event) {
-        if (frozen) {
+        if (currentlyFrozen) {
             event.setCancelled(true);
         }
     }

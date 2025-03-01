@@ -7,34 +7,18 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Iterator;
-
 public class PlayerDeathListener implements Listener {
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-        Iterator<ItemStack> it = event.getDrops().iterator();
-        while (it.hasNext()) {
-            ItemStack itemStack = it.next();
-            Material material = itemStack.getType();
-            if (material == Material.BLAZE_ROD) {
-                it.remove();
-                continue;
-            }
-
-            if (material == Material.OBSIDIAN) {
-                it.remove();
-                continue;
-            }
-
-            if (material == Material.COMPASS) {
-                it.remove();
-            }
-        }
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        event.getDrops().removeIf(itemDrop -> {
+            Material material = itemDrop.getType();
+            return material == Material.BLAZE_ROD || material == Material.OBSIDIAN || material == Material.COMPASS;
+        });
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
         event.getPlayer().getInventory().addItem(new ItemStack(Material.COMPASS));
     }
 }

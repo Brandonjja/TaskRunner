@@ -15,11 +15,16 @@ import com.brandonjja.taskRun.listeners.player.PlayerTravelToNether;
 import com.brandonjja.taskRun.listeners.tasks.TaskListeners;
 import com.brandonjja.taskRun.listeners.world.BlockListener;
 import com.brandonjja.taskRun.listeners.world.CreatureSpawnListener;
-import com.brandonjja.taskRun.listeners.world.EntityTameListener;
 
 public class ListenerManager {
 
+    private static boolean alreadyRegistered = false;
+
     public static void registerListeners() {
+        if (alreadyRegistered) {
+            return;
+        }
+
         register(new PlayerAchievementListener());
         register(new PlayerConnectionListener());
         register(new PlayerCraftListener());
@@ -31,11 +36,12 @@ public class ListenerManager {
 
         register(new BlockListener());
         register(new CreatureSpawnListener());
-        register(new EntityTameListener());
         register(new CompassClickListener());
 
         register(new BackCommand());
         register(new PauseCommand());
+
+        alreadyRegistered = true;
     }
 
     private static void register(Listener listener) {

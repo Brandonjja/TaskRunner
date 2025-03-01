@@ -50,34 +50,14 @@ public class ScoreboardTR {
         position = game.getTotalTasksToFinish() + 2;
 
         objective.getScore(" ").setScore(position - 1);
-        StringBuilder playerScore;
-        for (Player pl : Bukkit.getOnlinePlayers()) {
-            playerScore = new StringBuilder();
-            playerScore.append(ChatColor.AQUA)
-                    .append(pl.getName())
-                    .append(" ")
-                    .append(ChatColor.YELLOW)
-                    .append(TaskRun.getPlayer(pl).getFinishedTasks())
-                    .append("/")
-                    .append(game.getTotalTasksToFinish());
-            objective.getScore(playerScore.toString()).setScore(position++);
+
+        String playerScore;
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            int finishedTasks = TaskRun.getPlayer(onlinePlayer).getFinishedTasks();
+            int totalTasks = game.getTotalTasksToFinish();
+            playerScore = ChatColor.AQUA + onlinePlayer.getName() + " " + ChatColor.YELLOW + finishedTasks + "/" + totalTasks;
+            objective.getScore(playerScore).setScore(position++);
         }
-
-        // Code for player name/scores being displayed below task list
-
-        /*int ctr = Bukkit.getOnlinePlayers().size();
-
-        for (Player pl : Bukkit.getOnlinePlayers()) {
-            obj.getScore(ChatColor.AQUA + pl.getName() + " " + ChatColor.YELLOW + player.getFinishedTasks() + "/" + (TaskRun.currentGame.getTotalTasksToFinish())).setScore(ctr--);
-        }
-
-        ctr = TaskRun.currentGame.getTotalTasksToFinish() + Bukkit.getOnlinePlayers().size() + 1;
-
-        for (TR_Task task : player.getTaskList()) {
-            obj.getScore(task.toString()).setScore(ctr--);
-        }
-
-        obj.getScore(" ").setScore(ctr);*/
     }
 
 
@@ -112,10 +92,15 @@ public class ScoreboardTR {
         Game game = TaskRun.currentGame;
         String resetScore = ChatColor.AQUA + player.getName() + " " + ChatColor.YELLOW + (TaskRun.getPlayer(player).getFinishedTasks()) + "/" + game.getTotalTasksToFinish();
         String newScore = (ChatColor.AQUA + player.getName() + " " + ChatColor.YELLOW + (TaskRun.getPlayer(player).getFinishedTasks() + 1) + "/" + game.getTotalTasksToFinish());
-        for (Player pl : Bukkit.getOnlinePlayers()) {
-            PlayerTR trPlayer = TaskRun.getPlayer(pl);
-            trPlayer.getBoard().getScoreboard().resetScores(resetScore);
-            trPlayer.getBoard().getObjective().getScore(newScore).setScore(position);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            PlayerTR trPlayer = TaskRun.getPlayer(onlinePlayer);
+            ScoreboardTR scoreboard = trPlayer.getBoard();
+            if (scoreboard == null) {
+                continue;
+            }
+
+            scoreboard.getScoreboard().resetScores(resetScore);
+            scoreboard.getObjective().getScore(newScore).setScore(position);
         }
     }
 

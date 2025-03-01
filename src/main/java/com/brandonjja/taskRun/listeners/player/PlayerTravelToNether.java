@@ -23,9 +23,12 @@ public class PlayerTravelToNether implements Listener {
 
         Player player = event.getPlayer();
         PlayerTR trPlayer = TaskRun.getPlayer(player);
+
+        // Fixes this achievement not always displaying in chat for players in versions below 1.12. It will not
+        // actually award the achievement, but at least players are notified
         if (event.getTo().getWorld().getName().contains("nether") && !player.hasAchievement(Achievement.NETHER_PORTAL) && !trPlayer.hasEnteredNether()) {
-            for (Player pl : Bukkit.getOnlinePlayers()) {
-                pl.sendMessage(player.getName() + " has just earned the achievement " + ChatColor.GREEN + "[We Need to Go Deeper]");
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.sendMessage(player.getName() + " has just earned the achievement " + ChatColor.GREEN + "[We Need to Go Deeper]");
             }
         }
 

@@ -4,6 +4,7 @@ import com.brandonjja.taskRun.TaskRun;
 import com.brandonjja.taskRun.nms.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Chicken;
@@ -27,10 +28,11 @@ public class Game {
 
     private final List<Task> taskList = new ArrayList<>();
     private final int totalTasksToFinish = 5;
+
     private boolean gameOver = false;
 
     public Game() {
-        List<Task> allTasks = new ArrayList<>(Arrays.asList(Task.VALUES));
+        List<Task> allTasks = Arrays.asList(Task.VALUES);
         Collections.shuffle(allTasks);
         for (int i = 0; i < totalTasksToFinish; i++) {
             taskList.add(allTasks.get(i));
@@ -68,11 +70,12 @@ public class Game {
                         continue;
                     }
 
-                    player.getWorld().dropItem(entity.getLocation(), new ItemStack(Material.EGG));
+                    Location chickenLocation = entity.getLocation();
+                    player.getWorld().dropItem(chickenLocation, new ItemStack(Material.EGG));
                     if (NMSUtils.isAtLeastOneNine()) {
-                        player.getWorld().playSound(entity.getLocation(), Sound.valueOf("ENTITY_CHICKEN_EGG"), 2F, 1F);
+                        player.getWorld().playSound(chickenLocation, Sound.valueOf("ENTITY_CHICKEN_EGG"), 2F, 1F);
                     } else {
-                        player.getWorld().playSound(entity.getLocation(), Sound.CHICKEN_EGG_POP, 2F, 1F);
+                        player.getWorld().playSound(chickenLocation, Sound.CHICKEN_EGG_POP, 2F, 1F);
                     }
                 }
             }
@@ -107,11 +110,11 @@ public class Game {
             player.sendMessage(gameWonMsg);
             player.sendMessage(newGameMsg);
             if (NMSUtils.isAtLeastOneThirteen()) {
-                player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDER_DRAGON_GROWL"), 1, 1);
+                player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDER_DRAGON_GROWL"), 1F, 1F);
             } else if (NMSUtils.isAtLeastOneNine()) {
-                player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDERDRAGON_GROWL"), 1, 1);
+                player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDERDRAGON_GROWL"), 1F, 1F);
             } else {
-                player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+                player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 1F, 1F);
             }
 
             sendGameOverTitle(player, winner);

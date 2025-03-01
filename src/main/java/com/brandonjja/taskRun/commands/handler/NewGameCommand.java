@@ -19,12 +19,12 @@ public class NewGameCommand extends TaskRunCommand {
 
         TaskRun.currentGame = new Game();
 
-        for (Player pl : Bukkit.getOnlinePlayers()) {
-            TaskRun.getPlayer(pl).setNewScoreboard(true, false);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            TaskRun.getPlayer(onlinePlayer).setNewScoreboard(true, false);
             if (NMSUtils.isAtLeastOneNine()) {
-                pl.playSound(pl.getLocation(), Sound.valueOf("ENTITY_WITHER_SPAWN"), 1, 1);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf("ENTITY_WITHER_SPAWN"), 1F, 1F);
             } else {
-                pl.playSound(pl.getLocation(), Sound.WITHER_SPAWN, 1, 1);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.WITHER_SPAWN, 1F, 1F);
             }
         }
 
